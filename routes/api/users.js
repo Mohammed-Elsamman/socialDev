@@ -1,10 +1,15 @@
 const express = require("express");
+const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const router = express.Router();
+const keys = require('../../config/keys');
+const passport = require("passport");
 
-const secretOrKey = require('../../config/keys').secretOrKey;
+//Load Input Validation
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
+
 const User = require("../../models/User");
 router.get('/test', (req, res) => res.json({msg: "user is works"}));
 
@@ -12,6 +17,11 @@ router.get('/test', (req, res) => res.json({msg: "user is works"}));
 // @desc    register users
 // @access  public
 router.post("/register", (req, res) => {
+    const {errors, isValid} = validateRegisterInput(req.body);
+    //check validation
+    if (!isValid) {
+        return res.status(404).json({errors})
+    }
     User.findOne({email: req.body.email})
         .then(user => {
             if (user) {
@@ -45,8 +55,14 @@ router.post("/register", (req, res) => {
 // @desc    login users && return jwt
 // @access  public
 router.post("/login", (req, res) => {
-    const email = req.body.email
-    const password = req.body.password
+    const {errors, isValid} = validateLoginInput(req.body);
+    //check validation
+    if (!isValid) {
+        return res.status(404).json({errors})
+    }
+
+    const email = req.body.email;
+    const password = req.body.password;
     //find user by email
     User.findOne({email})
         .then(user => {
@@ -57,7 +73,8 @@ router.post("/login", (req, res) => {
             bcrypt.compare(password, user.password).then(isMatch => {
                 if (isMatch) {
                     const payload = {id: user.id, name: user.name, avatar: user.avatar};
-                    jwt.sign(payload, secretOrKey,
+                    //create jwt
+                    jwt.sign(payload, keys.secretOrKey,
                         {expiresIn: 3600},
                         (err, token) => {
                             res.json({
@@ -66,10 +83,22 @@ router.post("/login", (req, res) => {
                             })
                         });
                 } else {
-                    res.status(404).json({password: "this password incorrect"})
+                    errors.password = "this password incorrect";
+                    res.status(404).json(errors)
                 }
             })
         })
 });
-
+// @route   POST api/users/current
+// @desc    return current users
+// @access  private
+router.get("/current", passport.authenticate("jwt", {session: false}),
+    (req, res) => {
+        res.json({
+            id: req.user.id,
+            name: req.user.name,
+            email: req.user.email,
+            date: req.user.date,
+        })
+    });
 module.exports = router;
