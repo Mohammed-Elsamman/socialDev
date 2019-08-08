@@ -14,7 +14,11 @@ const db = require('./config/keys').mogoURI;
 mongoose
     .connect(db)
     .then(() => console.log("done"))
-    .catch(err => console.log("++++++++++++++++++++++++++++++++++++++++++++++++"));
+    .catch(err => {
+        console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
+        console.log(err);
+        console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
+    });
 
 //passport middleware
 app.use(passport.initialize());
