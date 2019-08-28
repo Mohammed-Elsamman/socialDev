@@ -236,7 +236,7 @@ router.delete(
     }
 );
 
-// @route DELETE api/profile/education/:exp_id
+// @route DELETE api/profile/education/:edu_id
 // @desc delete education from profile
 // @access Private
 
@@ -254,6 +254,22 @@ router.delete(
 
             })
             .catch(err => res.json(err))
+    }
+);
+
+// @route DELETE api/profile/delete
+// @desc delete user and profile
+// @access Private
+
+router.delete(
+    "/delete",
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Profile.findOneAndRemove({user: req.user.id}).then(() => {
+            User.findOneAndRemove({_id: req.user.id}).then(() => {
+                res.json({success: true})
+            });
+        })
     }
 );
 
