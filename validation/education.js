@@ -25,8 +25,6 @@ module.exports = validateLoginInput = data => {
         errors.from = "from date is required"
     }
 
-
-
     return {
         errors,
         isValid: isEmpty(errors),
