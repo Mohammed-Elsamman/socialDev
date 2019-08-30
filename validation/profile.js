@@ -13,7 +13,7 @@ module.exports = validateProfileInput = data => {
         errors.handle = "handle must be between 2 and 40 charachters"
     }
 
-    if (validator.isEmpty(data.status)) {
+    if (isEmpty(data.status)) {
         errors.status = "profile status is required"
     }
     if (!isEmpty(data.website)) {
@@ -21,11 +21,11 @@ module.exports = validateProfileInput = data => {
             errors.website = "not a valied URL"
         }
     }
-    if (!isEmpty(data.facebook)) {
-        if (validator.isURL(data.facebook)) {
-            errors.facebook = "not a valied URL"
-        }
-    }
+    // if (!isEmpty(data.facebook)) {
+    //     if (validator.isURL(data.facebook)) {
+    //         errors.facebook = "not a valied URL"
+    //     }
+    // }
     if (!isEmpty(data.twitter)) {
         if (validator.isURL(data.twitter)) {
             errors.twitter = "not a valied URL"
