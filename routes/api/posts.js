@@ -80,7 +80,7 @@ router.get('/:id',
     }
 );
 
-// @route   DELETE api/post/:id
+// @route   DELETE api/post/like/:id
 // @desc    ADD like for post
 // @access  private
 router.post('/like/:id',
@@ -97,6 +97,29 @@ router.post('/like/:id',
 
                 post.likes.unshift({user: req.user.id});
                 post.save().then(post => res.json(post))
+            })
+            .catch(err => res.status(404).json({postnotfound: "No Post Found"}))
+    }
+);
+
+
+// @route   DELETE api/post/unlike/:id
+// @desc    ADD like for post
+// @access  private
+router.delete('/unlike/:id',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Post.findById(req.params.id)
+            .then(post => {
+                if (!post) {
+                    return res.status(404).json({nopst: "there is no post"})
+                }
+                if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+                    return res.status(404).json({notliked: "you have not liked this post yet"})
+                }
+                likes = post.likes.map(like => like.user.toString()).indexOf(req.user.id)
+                post.likes.splice(likes,1);
+                post.save().then(() => res.json(post))
             })
             .catch(err => res.status(404).json({postnotfound: "No Post Found"}))
     }
@@ -131,7 +154,7 @@ router.post('/comment/:id',
     }
 );
 
-// @route   POST api/post/like/:id
+// @route   POST api/post/:id
 // @desc    DELETE post
 // @access  private
 router.delete('/:id',
@@ -165,7 +188,6 @@ router.delete('/comment/:id/:cid',
                     res.status(404).json({nopst: "there is no post"})
                 }
                 comments = post.comments.filter(comment => comment.id === req.params.cid);
-                console.log(comments);
                 if(comments.length === 0){
                     res.status(404).json({nocomment: "there is no comment to delete"})
                 }
@@ -173,7 +195,6 @@ router.delete('/comment/:id/:cid',
                     res.status(404).json({noauthorized: "user no authorized"})
                 }
                 comment = post.comments.map(cmnt => cmnt.id ).indexOf(req.params.cid)
-                console.log(comment);
                 post.comments.splice(comment,1);
                 post.save().then(() => res.json(post))
             })
