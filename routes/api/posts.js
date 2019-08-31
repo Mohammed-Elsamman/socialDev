@@ -104,7 +104,7 @@ router.post('/like/:id',
 
 
 // @route   DELETE api/post/unlike/:id
-// @desc    ADD like for post
+// @desc    REMOVE like for post
 // @access  private
 router.delete('/unlike/:id',
     passport.authenticate('jwt', {session: false}),
@@ -154,7 +154,7 @@ router.post('/comment/:id',
     }
 );
 
-// @route   POST api/post/:id
+// @route   DELETE api/post/:id
 // @desc    DELETE post
 // @access  private
 router.delete('/:id',
