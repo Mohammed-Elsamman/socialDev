@@ -36,6 +36,7 @@ module.exports = validateRegisterInput = data => {
     if (data.password !== data.password2) {
         errors.password2 = "the tow password field are diffrent"
     }
+    console.log(errors);
     return {
         errors,
         isValid: isEmpty(errors),

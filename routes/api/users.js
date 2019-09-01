@@ -19,12 +19,12 @@ router.get('/test', (req, res) => res.json({msg: "user is works"}));
 router.post(
     "/register",
     (req, res) => {
-        const {errors, isValid} = validateRegisterInput(req.body);
 
+        console.log("------------");
+        const {errors, isValid} = validateRegisterInput(req.body);
         //check validation
         if (!isValid) {
-            console.log("-------1111111111111111111");
-            return res.status(400).json({errors})
+            return res.status(404).json({errors})
         }
         User.findOne({email: req.body.email})
             .then(user => {
@@ -96,6 +96,7 @@ router.post("/login", (req, res) => {
             })
         })
 });
+
 
 
 // @route   POST api/users/current
