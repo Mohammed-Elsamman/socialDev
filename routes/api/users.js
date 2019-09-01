@@ -19,16 +19,18 @@ router.get('/test', (req, res) => res.json({msg: "user is works"}));
 router.post(
     "/register",
     (req, res) => {
-        console.log("------------");
         const {errors, isValid} = validateRegisterInput(req.body);
+
         //check validation
         if (!isValid) {
-            return res.status(404).json({errors})
+            console.log("-------1111111111111111111");
+            return res.status(400).json({errors})
         }
         User.findOne({email: req.body.email})
             .then(user => {
                 if (user) {
-                    return res.status(400).json({email: "Email Already exists"})
+                    errors.email = "Email Already exists"
+                    return res.status(400).json(errors)
                 } else {
                     const avatar = gravatar.url(req.body.email, {
                         s: "200", //size
@@ -47,7 +49,7 @@ router.post(
                             newUser.password = hash;
                             newUser.save()
                                 .then(user => res.json(user))
-                                .catch(err => console.log(ess))
+                                .catch(err => console.log(err))
                         })
                     })
                 }
@@ -70,7 +72,9 @@ router.post("/login", (req, res) => {
     User.findOne({email})
         .then(user => {
             if (!user) {
-                return res.status(4040).json({email: "this email doesn't existe"})
+                errors.email = "this email doesn't existe";
+                console.log("2");
+                return res.status(400).json({errors})
             }
             //compare password
             bcrypt.compare(password, user.password).then(isMatch => {
@@ -87,12 +91,11 @@ router.post("/login", (req, res) => {
                         });
                 } else {
                     errors.password = "this password incorrect";
-                    res.status(404).json(errors)
+                    res.status(404).json({errors})
                 }
             })
         })
 });
-
 
 
 // @route   POST api/users/current

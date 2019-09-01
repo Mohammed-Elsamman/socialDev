@@ -30,13 +30,12 @@ module.exports = validateRegisterInput = data => {
     }
 
     if (validator.isEmpty(data.password2)) {
-        errors.password = "confirm password is required"
+        errors.password2 = "confirm password is required"
     }
-    //check if the tow password field are equl or not
-    // if (!validator.equals(data.password != data.password2)) {
-    //     errors.password = "the tow password field are diffrent"
-    // }
-    console.log(errors);
+    // check if the tow password field are equl or not
+    if (data.password !== data.password2) {
+        errors.password2 = "the tow password field are diffrent"
+    }
     return {
         errors,
         isValid: isEmpty(errors),
