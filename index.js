@@ -12,9 +12,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 //DB config
 const db = require('./config/keys').mognoURI;
+const dbLocal = require('./config/keys').mongoLocal;
 //connect to MongoDB
 mongoose
-    .connect(db,{ useNewUrlParser: true })
+    .connect(dbLocal,{ useNewUrlParser: true })
     .then(() => console.log("done"))
     .catch(err => {
         console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
