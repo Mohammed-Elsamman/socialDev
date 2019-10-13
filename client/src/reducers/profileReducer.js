@@ -7,14 +7,13 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-    console.log(action.payload);
     switch (action.type) {
-        case GET_PROFILE:
+        case PROFILE_LOADING:
             return {
                 ...state,
                 loading: true
             };
-        case PROFILE_LOADING:
+        case GET_PROFILE:
             return {
                 ...state,
                 profile: action.payload,
@@ -23,7 +22,7 @@ export default function (state = initialState, action) {
         case CLEAR_CURRENT_PROFILE:
             return {
                 ...state,
-                profile: null,
+                profile: null
             };
         default:
             return state;
