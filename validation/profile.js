@@ -17,32 +17,35 @@ module.exports = validateProfileInput = data => {
         errors.status = "profile status is required"
     }
     if (!isEmpty(data.website)) {
-        if (validator.isURL(data.website)) {
+        if (!validator.isURL(data.website)) {
             errors.website = "not a valied URL"
         }
     }
-    // if (!isEmpty(data.facebook)) {
-    //     if (validator.isURL(data.facebook)) {
-    //         errors.facebook = "not a valied URL"
-    //     }
-    // }
+    if (!isEmpty(data.facebook)) {
+        console.log(data.facebook)
+        if (!validator.isURL(data.facebook)) {
+            errors.facebook = "not a valied URL"
+        }
+    }
     if (!isEmpty(data.twitter)) {
-        if (validator.isURL(data.twitter)) {
+        if (!validator.isURL(data.twitter)) {
             errors.twitter = "not a valied URL"
         }
     }
     if (!isEmpty(data.youtube)) {
-        if (validator.isURL(data.youtube)) {
+        if (!validator.isURL(data.youtube)) {
             errors.youtube = "not a valied URL"
         }
     }
     if (!isEmpty(data.instagram)) {
-        if (validator.isURL(data.instagram)) {
+        if (!validator.isURL(data.instagram)) {
             errors.instagram = "not a valied URL"
         }
     }
     if (!isEmpty(data.linkedin)) {
-        if (validator.isURL(data.linkedin)) {
+        console.log(data.linkedin)
+        if (!validator.isURL(data.linkedin)) {
+            console.log("1111111111111111111111111")
             errors.linkedin = "not a valied URL"
         }
     }

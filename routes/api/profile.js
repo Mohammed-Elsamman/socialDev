@@ -103,6 +103,7 @@ router.post(
         const profileFields = {};
         profileFields.user = req.user.id;
         if (req.body.handle) profileFields.handle = req.body.handle;
+        if (req.body.status) profileFields.status = req.body.status;
         if (req.body.company) profileFields.company = req.body.company;
         if (req.body.website) profileFields.website = req.body.website;
         if (req.body.location) profileFields.location = req.body.location;
@@ -147,6 +148,22 @@ router.post(
                 }
             });
     });
+
+// @route DELETE api/profile/delete
+// @desc delete user and profile
+// @access Private
+
+router.delete(
+    "/",
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Profile.findOneAndRemove({user: req.user.id}).then(() => {
+            User.findOneAndRemove({_id: req.user.id}).then(() => {
+                res.json({success: true})
+            });
+        })
+    }
+);
 
 // @route   POST api/profile/experience
 // @desc    add experience to profile
@@ -254,22 +271,6 @@ router.delete(
 
             })
             .catch(err => res.json(err))
-    }
-);
-
-// @route DELETE api/profile/delete
-// @desc delete user and profile
-// @access Private
-
-router.delete(
-    "/delete",
-    passport.authenticate('jwt', {session: false}),
-    (req, res) => {
-        Profile.findOneAndRemove({user: req.user.id}).then(() => {
-            User.findOneAndRemove({_id: req.user.id}).then(() => {
-                res.json({success: true})
-            });
-        })
     }
 );
 
