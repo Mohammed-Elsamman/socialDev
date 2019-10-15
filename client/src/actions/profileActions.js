@@ -75,3 +75,16 @@ export const addExperience = (profileDate, history) => dispatch => {
             })
         )
 };
+
+
+//Add Experience
+export const addEducation = (profileDate, history) => dispatch => {
+    axios.post("/api/profile/education", profileDate)
+        .then(res => history.push("/dashboard"))
+        .catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data.errors
+            })
+        )
+};

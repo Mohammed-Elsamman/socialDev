@@ -17,6 +17,7 @@ import Dashboard from "./components/dasboard/Dashboard";
 import PrivateRoute from "./components/common/PrivateRoute";
 import CreateProfile from "./components/profile/CreateProfile";
 import EditProfile from "./components/profile/EditProfile";
+import AddEducation from "./components/add-credentials/AddEducation";
 import AddExperience from "./components/add-credentials/AddExperience";
 
 // Check for token
@@ -59,6 +60,9 @@ class App extends Component {
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/edit-profile" component={EditProfile}/>
+                            </Switch>
+                            <Switch>
+                                <PrivateRoute exact path="/add-education" component={AddEducation}/>
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/add-experience" component={AddExperience}/>
