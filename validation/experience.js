@@ -16,6 +16,9 @@ module.exports = validateLoginInput = data => {
     if (validator.isEmpty(data.company)) {
         errors.company = "company is required"
     }
+    if (validator.isEmpty(data.location)) {
+        errors.location = "location is required"
+    }
 
     if (validator.isEmpty(data.from)) {
         errors.from = "from date is required"

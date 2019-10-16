@@ -5,6 +5,8 @@ import PropTypes from "prop-types"
 import Spinner from "../common/Spinner";
 import {getCurrentProfile,deleteAccount} from "../../actions/profileActions";
 import ProfileActions from "./ProfileActions";
+import Experience from "./Experience";
+import Education from "./Education";
 
 class Dashboard extends Component {
     componentDidMount() {
@@ -27,8 +29,9 @@ class Dashboard extends Component {
                         <p className="lead text-muted">Welcom
                             <Link to={`/profile/${profile.handle}`}> {user.name}</Link>
                         </p>
-                        <ProfileActions/>
-
+                        <ProfileActions />
+                        <Experience experience={profile.experience}/>
+                        <Education education={profile.education}/>
                         <div>
                             <button onClick={this.onDeleteClick.bind(this)} className="btn btn-danger">
                                 Delete My Account

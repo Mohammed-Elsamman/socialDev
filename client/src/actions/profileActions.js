@@ -75,7 +75,23 @@ export const addExperience = (profileDate, history) => dispatch => {
             })
         )
 };
-
+//Delete Experience
+export const deleteExperience = exp_id => dispatch => {
+    if (window.confirm("Are You Shure To Delete this experience")) {
+        axios.delete(`/api/profile/experience/${exp_id}`)
+            .then(res =>
+                dispatch({
+                    type: GET_PROFILE,
+                    payload: res.data
+                })
+            ).catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data.errors
+            })
+        )
+    }
+};
 
 //Add Experience
 export const addEducation = (profileDate, history) => dispatch => {
@@ -87,4 +103,22 @@ export const addEducation = (profileDate, history) => dispatch => {
                 payload: err.response.data.errors
             })
         )
+};
+
+//Delete Education
+export const deleteEducation = edu_id => dispatch => {
+    if (window.confirm("Are You Shure To Delete this education")) {
+        axios.delete(`/api/profile/education/${edu_id}`)
+            .then(res =>
+                dispatch({
+                    type: GET_PROFILE,
+                    payload: res.data
+                })
+            ).catch(err =>
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data.errors
+            })
+        )
+    }
 };

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from "prop-types"
 import TextFieldGroup from "../common/TextFieldGroup";
@@ -60,7 +60,6 @@ class AddExperience extends Component {
 
     render() {
         const {errors} = this.state;
-        console.log(errors);
         return (
             <div className="add-experience">
                 <div className="container">
@@ -161,4 +160,4 @@ AddExperience.propTypes = {
 export default connect(
     mapStateToProps,
     {addExperience}
-)(withRouter(AddExperience));
+)(AddExperience);
