@@ -11,14 +11,14 @@ class Profiles extends Component {
     }
 
     render() {
-        const { profile, loading } = this.props.profile;
+        const { profiles, loading } = this.props.profile;
         console.log(this.props);
         let profileItems;
-        if (profile === null || loading) {
+        if (profiles === null || loading) {
             profileItems = <Spinner />;
         } else {
-            if (profile.length > 0) {
-                profileItems = profile.map(profile => (
+            if (profiles.length > 0) {
+                profileItems = profiles.map(profile => (
                     <ProfileItem key={profile._id} profile={profile} />
                 ));
             } else {
