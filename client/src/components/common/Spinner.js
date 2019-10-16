@@ -1,5 +1,5 @@
 import React from 'react';
-import spinner from "./spinner.jpg"
+import spinner from "./spinner.gif"
 export default  () => (
     <div>
         <img

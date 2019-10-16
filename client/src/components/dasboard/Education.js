@@ -39,7 +39,6 @@ class Education extends Component {
                 <h4 className="mb-4">Education Cardential</h4>
                 <table className="table">
                     <thead>
-
                     {education.length > 0 ? (
                         <tr>
                             <th>School</th>

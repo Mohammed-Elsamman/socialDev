@@ -242,7 +242,7 @@ router.delete(
     (req, res) => {
         Profile.findOne({user: req.user.id})
             .then(profile => {
-                removeIndex = profile.experience
+                let removeIndex = profile.experience
                     .map(item => item.id)
                     .indexOf(req.params.exp_id)
                 profile.experience.splice(removeIndex, 1)
@@ -263,10 +263,10 @@ router.delete(
     (req, res) => {
         Profile.findOne({user: req.user.id})
             .then(profile => {
-                removeIndex = profile.education
+                let removeIndex = profile.education
                     .map(item => item.id)
-                    .indexOf(req.params.edu_id)
-                profile.education.splice(removeIndex, 1)
+                    .indexOf(req.params.edu_id);
+                profile.education.splice(removeIndex, 1);
                 profile.save().then(profile => res.json(profile))
 
             })
