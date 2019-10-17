@@ -20,12 +20,12 @@ class ProfileHeader extends Component {
                             </h1>
                             <p className="lead text-center">
                                 {profile.status} {isEmpty(profile.company) ? null : (
-                                <p>at {profile.company}</p>
+                                <span>at {profile.company}</span>
                             )}
                             </p>
                             <p>
                                 {isEmpty(profile.location) ? null : (
-                                    <p>at {profile.location}</p>
+                                    <span>at {profile.location}</span>
                                 )}
                             </p>
                             <p>
