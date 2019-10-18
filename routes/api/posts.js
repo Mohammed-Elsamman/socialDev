@@ -15,6 +15,7 @@ router.get('/test', (req, res) => res.json({msg: "posts is works"}));
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
+        console.log(req.body);
         const {errors, isValid} = validationPostInpot(req.body);
         if (!isValid) {
             return res.status(404).json({errors})
@@ -25,6 +26,7 @@ router.post('/',
             avatar: req.body.avatar,
             user: req.user.id,
         });
+        console.log(newPost);
         newPost.save().then(post => res.json(post))
     }
 );
