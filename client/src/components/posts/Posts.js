@@ -3,15 +3,31 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import Spinner from "../common/Spinner";
 import PostForm from "./PostForm";
+import {getPosts} from "../../actions/postActions";
+import PostFeed from "./PostFeed";
 
 class Posts extends Component {
+
+    componentDidMount() {
+        this.props.getPosts()
+    }
+
     render() {
+        const {posts, loading} = this.props.post;
+        let postContent;
+        if (posts === null || loading) {
+            postContent = <Spinner/>
+        } else {
+            postContent = <PostFeed posts={posts}/>
+        }
+
         return (
             <div className="feed">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
                             <PostForm/>
+                            {postContent}
                         </div>
                     </div>
                 </div>
@@ -20,13 +36,17 @@ class Posts extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {};
-}
-
 Posts.propTypes = {
-    
+    post: PropTypes.object.isRequired,
+    getPosts: PropTypes.func.isRequired
 };
+
+const mapStateToProps = state => ({
+    post: state.post
+})
+
+Posts.propTypes = {};
 export default connect(
     mapStateToProps,
+    {getPosts}
 )(Posts);

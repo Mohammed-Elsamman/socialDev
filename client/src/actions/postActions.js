@@ -16,3 +16,26 @@ export const addPost = postData => dispatch => {
             })
         );
 };
+//GET POSTS
+export const getPosts = () => dispatch => {
+    dispatch(setPostLoading())
+    axios.get("/api/post",)
+        .then(res =>
+            dispatch({
+                type: GET_POSTS,
+                payload: res.data
+            }))
+        .catch(err =>
+            dispatch({
+                type: GET_POSTS,
+                payload: null
+            })
+        );
+};
+
+//set loading post
+export const setPostLoading =()=>{
+    return{
+        type:POST_LOADING
+    }
+}
