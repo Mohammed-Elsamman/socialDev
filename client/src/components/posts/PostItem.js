@@ -3,12 +3,34 @@ import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-
+import {deletePost, addLike, removeLike} from "../../actions/postActions";
 
 class PostItem extends Component {
 
+    onClickDelete(post_id) {
+        this.props.deletePost(post_id)
+
+    }
+
+    onClickLike(postId) {
+        this.props.addLike(postId)
+    }
+
+    onClickUnlike(postId) {
+        this.props.removeLike(postId)
+    }
+
+    findUserLike(likes) {
+        const {auth} = this.props;
+        if (likes.filter(like => like.user === auth.user.id).length > 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     render() {
-        const {post, auth} = this.props
+        const {post, auth} = this.props;
         return (
             <div className="card card-body mb-3">
                 <div className="row">
@@ -27,21 +49,29 @@ class PostItem extends Component {
                         <p className="lead">
                             {post.text}
                         </p>
-                        <button type="button" className="btn btn-light mr-1">
-                            <i className="text-info fas fa-thumbs-up"/>
+                        <button type="button" className="btn btn-light mr-1"
+                                onClick={this.onClickLike.bind(this, post._id)}
+                        >
+                            <i className={classnames("fas fa-thumbs-up", {
+                                "text-info": this.findUserLike(post.likes)
+                            })}/>
                             <span className="badge badge-light">
                                 {post.likes.length}
                             </span>
                         </button>
-                        <button type="button" className="btn btn-light mr-1">
+                        <button type="button" className="btn btn-light mr-1"
+                                onClick={this.onClickUnlike.bind(this, post._id)}
+                        >
                             <i className="text-secondary fas fa-thumbs-down"/>
                         </button>
                         <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
                             Comments
                         </Link>
                         {post.user === auth.user.id ? (
-                            <button className="btn btn-danger mr-1">
-                                delete
+                            <button className="btn btn-danger mr-1"
+                                    onClick={this.onClickDelete.bind(this, post._id)}
+                            >
+                                <i className="fas fa-times"/>
                             </button>
                         ) : null}
 
@@ -56,6 +86,9 @@ class PostItem extends Component {
 PostItem.propTypes = {
     post: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    deletePost: PropTypes.func.isRequired,
+    addLike: PropTypes.func.isRequired,
+    removeLike: PropTypes.func.isRequired,
 
 };
 
@@ -66,4 +99,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
+    {deletePost, addLike, removeLike}
 )(PostItem);

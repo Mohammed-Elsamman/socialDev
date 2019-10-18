@@ -48,7 +48,7 @@ router.get('/',
 );
 
 // @route   GET api/post/
-// @desc    get mypost post
+// @desc    get mypost
 // @access  private
 router.get('/my_post',
     passport.authenticate('jwt', {session: false}),
@@ -91,16 +91,16 @@ router.post('/like/:id',
         Post.findById(req.params.id)
             .then(post => {
                 if (!post) {
-                    res.status(404).json({nopst: "there is no post"})
+                    return res.status(404).json({errors: {nopst: "there is no post"}})
                 }
                 if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
-                    res.status(404).json({alreadyliked: "User already liked this post"})
+                    return res.status(400).json({errors: {alreadyliked: 'User already liked this post'}});
                 }
 
                 post.likes.unshift({user: req.user.id});
                 post.save().then(post => res.json(post))
             })
-            .catch(err => res.status(404).json({postnotfound: "No Post Found"}))
+            .catch(err => res.status(404).json({errors: {postnotfound: "No Post Found"}}))
     }
 );
 
@@ -114,16 +114,16 @@ router.delete('/unlike/:id',
         Post.findById(req.params.id)
             .then(post => {
                 if (!post) {
-                    return res.status(404).json({nopst: "there is no post"})
+                    return res.status(404).json({errors: {nopst: "there is no post"}})
                 }
                 if (post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
-                    return res.status(404).json({notliked: "you have not liked this post yet"})
+                    return res.status(404).json({errors: {notliked: "you have not liked this post yet"}})
                 }
-                likes = post.likes.map(like => like.user.toString()).indexOf(req.user.id)
-                post.likes.splice(likes,1);
+                let likes = post.likes.map(like => like.user.toString()).indexOf(req.user.id)
+                post.likes.splice(likes, 1);
                 post.save().then(() => res.json(post))
             })
-            .catch(err => res.status(404).json({postnotfound: "No Post Found"}))
+            .catch(err => res.status(404).json({errors: {postnotfound: "No Post Found"}}))
     }
 );
 
@@ -171,7 +171,7 @@ router.delete('/:id',
                 if (post.user.toString() !== req.user.id) {
                     res.status(404).json({noauthorized: "user no authorized"})
                 }
-                post.remove().then(() => res.json({success: true}))
+                post.remove().then(() => res.json({"id": req.params.id}))
             })
             .catch(err => res.status(404).json(err))
     }
@@ -189,15 +189,15 @@ router.delete('/comment/:id/:cid',
                 if (!post) {
                     res.status(404).json({nopst: "there is no post"})
                 }
-                comments = post.comments.filter(comment => comment.id === req.params.cid);
-                if(comments.length === 0){
+                let comments = post.comments.filter(comment => comment.id === req.params.cid);
+                if (comments.length === 0) {
                     res.status(404).json({nocomment: "there is no comment to delete"})
                 }
-                if(comments[0].user.toString() !== req.user.id || comments[0].user.toString() !== post.user.toString()){
+                if (comments[0].user.toString() !== req.user.id || comments[0].user.toString() !== post.user.toString()) {
                     res.status(404).json({noauthorized: "user no authorized"})
                 }
-                comment = post.comments.map(cmnt => cmnt.id ).indexOf(req.params.cid)
-                post.comments.splice(comment,1);
+                let comment = post.comments.map(cmnt => cmnt.id).indexOf(req.params.cid)
+                post.comments.splice(comment, 1);
                 post.save().then(() => res.json(post))
             })
             .catch(err => res.status(404).json(err))
