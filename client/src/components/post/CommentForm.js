@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
-import {addPost} from "../../actions/postActions";
+import {addComment} from "../../actions/postActions";
 
-class PostForm extends Component {
+class CommentForm extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             text: "",
             errors: {}
-        }
+        };
         this.onSubmit = this.onSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
     }
@@ -23,13 +23,15 @@ class PostForm extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        const {user} = this.props.auth
-        const newPost = {
+        const {user} = this.props.auth;
+        const {postId} = this.props;
+        const newComment = {
+            user: user.id,
             text: this.state.text,
             name: user.name,
             avatar: user.avatar,
         };
-        this.props.addPost(newPost);
+        this.props.addComment(postId, newComment);
         this.setState({text: ''})
     }
 
@@ -43,13 +45,13 @@ class PostForm extends Component {
             <div className="post-form mb-3">
                 <div className="card card-info">
                     <div className="card-header bg-info text-white">
-                        say something
+                        Make a Comment
                     </div>
                     <div className="card-body">
                         <form onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <TextAreaFieldGroup
-                                    placeholder="write your post"
+                                    placeholder="Replay to post..."
                                     onChange={this.onChange}
                                     name="text"
                                     value={this.state.text}
@@ -67,8 +69,9 @@ class PostForm extends Component {
     }
 }
 
-PostForm.propTypes = {
-    addPost: PropTypes.func.isRequired,
+CommentForm.propTypes = {
+    addComment: PropTypes.func.isRequired,
+    postId: PropTypes.string.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
 };
@@ -80,5 +83,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {addPost}
-)(PostForm);
+    {addComment}
+)(CommentForm);

@@ -9,7 +9,7 @@ class ProfileItem extends Component {
     render() {
         const {profile} = this.props
         return (
-            <div className="card card-body be-light mb-3">
+            <div className="card card-body bg-light mb-3">
                 <div className="row">
                     <div className="col-2">
                         <img src={profile.user.avatar} alt={profile.user.name} className="rounded-circle"/>

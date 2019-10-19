@@ -76,7 +76,7 @@ router.get('/:id',
                 if (!post) {
                     res.status(404).json({nopst: "there is no post"})
                 }
-                res.json(post)
+                res.json(post[0])
             })
             .catch(err => res.status(404).json(err))
     }
@@ -128,7 +128,7 @@ router.delete('/unlike/:id',
 );
 
 
-// @route   DELETE api/comment/:id
+// @route   POST api/comment/:id
 // @desc    ADD comment for post
 // @access  private
 router.post('/comment/:id',
