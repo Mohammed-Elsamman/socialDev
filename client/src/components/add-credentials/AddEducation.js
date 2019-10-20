@@ -26,9 +26,7 @@ class AddEducation extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.errors);
         if (nextProps.errors) {
-            console.log(nextProps.errors);
             this.setState({errors: nextProps.errors})
         }
     }

@@ -56,7 +56,7 @@ router.get('/my_post',
         Post.find({user: req.user.id})
             .then(post => {
                 if (!post) {
-                    res.status(404).json({nopst: "there is no post for that user"})
+                    return res.status(404).json({nopst: "there is no post for that user"})
                 }
                 res.json(post)
             })

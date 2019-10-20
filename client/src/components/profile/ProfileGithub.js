@@ -21,7 +21,6 @@ class ProfileGithub extends Component {
         fetch(`https://api.github.com/users/${username}/repos?per_page=${count}&sort=${sort}&client_id=${clientId}&client_secret=${clientSecret}`)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if(!data.message)
                     this.setState({repos: data})
             }).catch(err => {
@@ -31,7 +30,6 @@ class ProfileGithub extends Component {
 
     render() {
         const {repos} = this.state;
-        console.log(repos);
         const repoItems = repos.map(repo => (
                 <div key={repo.id} className="card card-body mb-2">
                     <div className="row">

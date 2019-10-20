@@ -97,6 +97,104 @@ router.post("/login", (req, res) => {
         })
 });
 
+// @route   POST api/users/follow/:id/:follow_id
+// @desc    fllowing user to onther user
+// @access  public
+router.post(
+    "/follow/:id/:follow_id",
+    (req, res) => {
+        passport.authenticate('jwt', {session: false}),
+            User.findById(req.params.id)
+                .then(user => {
+                    if (!user) {
+                        return res.status(400).json({errors: {nouser: "your are not a user"}})
+
+                    } else {
+                        User.findById(req.params.follow_id)
+                            .then(follow_user => {
+                                if (!follow_user) {
+                                    return res.status(400).json({errors: {nouser: "your are not a user"}})
+                                } else {
+                                    if (user.follwoing.filter(follwo => follwo.user.toString() === follow_user).length > 0) {
+                                        return res.status(400).json({errors: {alreadyfollowed: 'you are already follow that user'}});
+                                    }
+                                }
+                                follow_user.follwoers.unshift({user: req.user.id});
+                                follow_user.save().then(user =>{
+
+                                })
+                            })
+                    }
+                    user.follwoing.unshift({user: req.params.follow_id});
+
+                    user.save().then(user => res.json(user))
+                }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
+    });
+
+
+// @route   POST api/users/unfollow/:id/:follow_id
+// @desc    unfllowing user to onther user
+// @access  public
+router.post(
+    "/unfollow/:id/:follow_id",
+    (req, res) => {
+        passport.authenticate('jwt', {session: false}),
+            User.findById(req.params.id)
+                .then(user => {
+                    if (!user) {
+                        return res.status(400).json({errors: {nouser: "your are not a user"}})
+                    } else {
+                        User.findById(req.params.follow_id)
+                            .then(follow_user => {
+                                if (!follow_user) {
+                                    return res.status(400).json({errors: {nouser: "your are not a user"}})
+                                } else {
+                                    if (user.follwoing.filter(follwo => follwo.user.toString() === follow_user).length > 0) {
+                                        return res.status(400).json({errors: {alreadyfollowed: 'you are already follow that user'}});
+                                    }
+                                }
+                                let follwoers = follow_user.follwoers.map(follwoer => follwoer.user.toString()).indexOf(req.user.id)
+                                follow_user.follwoers.splice(follwoers, 1);
+                                follow_user.save().then(() => {})
+                            })
+                    }
+                    let follwoing = follow_user.follwoing.map(follwoer => follwoer.user.toString()).indexOf(follow_user.id)
+                    user.follwoing.splice(follwoing, 1);
+                    user.save().then(user => res.json(user))
+                }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
+    });
+
+// @route   GET api/users/following/
+// @desc    get all following
+// @access  public
+router.get(
+    "/following",
+    (req, res) => {
+        passport.authenticate('jwt', {session: false}),
+            User.findById(req.user.id)
+                .then(user => {
+                    if (!user) {
+                        return res.status(400).json({errors: {nouser: "your are not a user"}})
+                    }
+                    res.json(user.follwoing)
+                }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
+    });
+
+// @route   GET api/users/followers
+// @desc    get all followers
+// @access  public
+router.get(
+    "/followers",
+    (req, res) => {
+        passport.authenticate('jwt', {session: false}),
+            User.findById(req.user.id)
+                .then(user => {
+                    if (!user) {
+                        return res.status(400).json({errors: {nouser: "your are not a user"}})
+                    }
+                    res.json(user.follwoers)
+                }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
+    });
 
 
 // @route   POST api/users/current
