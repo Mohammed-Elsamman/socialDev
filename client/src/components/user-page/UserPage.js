@@ -25,7 +25,7 @@ class UserPage extends Component {
             myPageContent = <Spinner/>
         } else {
             myPageContent = (
-                <div >
+                <div className="container">
                     <div className="row">
                         <div className="col-md-12">
                             <ProfileHeader profile={profile}/>

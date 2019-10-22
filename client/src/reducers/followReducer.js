@@ -9,14 +9,13 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case GET_FOLLOWING:
-            console.log(action.payload.follwoing);
+            console.log(action.payload);
             return {
                 ...state,
-                following: action.payload.follwoing,
+                following: action.payload,
                 loading: false
             };
         case GET_FOLLOWERS:
-            console.log(action.payload);
             return {
                 ...state,
                 followers: action.payload,

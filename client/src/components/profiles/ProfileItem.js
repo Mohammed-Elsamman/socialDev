@@ -14,7 +14,7 @@ class ProfileItem extends Component {
             followButton = (
                 <button
                     onClick={this.props.followingUser.bind(this, auth.user.id, profile.user._id)}
-                    className="btn btn-danger">
+                    className="btn btn-info">
                     follow
                 </button>
             )
@@ -31,14 +31,8 @@ class ProfileItem extends Component {
             <div className="card card-body bg-light mb-3">
                 <div className="row">
                     <div className="col-2">
-                        <div>
-                            {profile.user._id === auth.user.id ? null : (
-                                <div>
-                                    {followButton}
-                                </div>
-                            )}
-                        </div>
-                        <div>
+
+                        <div className="mb-5">
                             <img src={profile.user.avatar} alt={profile.user.name} className="rounded-circle"/>
                         </div>
                     </div>
@@ -54,9 +48,14 @@ class ProfileItem extends Component {
                             at {profile.location}
                         </span>)}
                         </p>
-                        <Link to={`/profile/${profile.handle}`} className="btn btn-inf">
+                        <Link to={`/profile/${profile.handle}`} className="btn btn-info">
                             View Profile
                         </Link>
+                        {profile.user._id === auth.user.id ? null : (
+                            <div className="mt-3">
+                                {followButton}
+                            </div>
+                        )}
                     </div>
                     <div className="col-md-4 d-none d-md-block">
                         <h4>Skills Set</h4>

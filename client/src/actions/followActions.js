@@ -64,16 +64,12 @@ export const unFollowingUser = (Id, followId) => dispatch => {
 
 //unfollowing user
 export const unFollowingUserPage = (Id, followId) => dispatch => {
+    console.log(Id);
+    console.log(followId);
     axios.post(`/api/user/unfollow/${Id}/${followId}`)
         .then(res =>
-            dispatch({
-                type: GET_FOLLOWING,
-                payload: res.data
-            })
+            dispatch(getFollwoing(Id))
         ).catch(err =>
-        dispatch({
-            type: GET_FOLLOWING,
-            payload: null
-        })
+        dispatch(getFollwoing(Id))
     );
 };

@@ -118,7 +118,8 @@ router.post(
                                     }
                                 }
                                 follow_user.follwoers.unshift({user: user.id});
-                                follow_user.save().then(user => {})
+                                follow_user.save().then(user => {
+                                })
                                 user.follwoing.unshift({user: follow_user.id});
                                 user.save().then(user => res.json(user))
                             })
@@ -169,13 +170,22 @@ router.get(
     "/following/:id",
     (req, res) => {
         passport.authenticate('jwt', {session: false}),
-            User.findById(req.params.id,{"name":0,"email":0,"password":0,"avatar":0,"data":0,"follwoers":0,})
+            User.findById(req.params.id, {
+                "name": 0,
+                "email": 0,
+                "password": 0,
+                "avatar": 0,
+                "data": 0,
+                "follwoers": 0,
+            })
                 .then(user => {
-                    console.log(user);
+
                     if (!user) {
                         return res.status(400).json({errors: {nouser: "your are not a user"}})
                     }
-                    res.json(user)
+                    let ids = [...user.follwoing.map(follow => follow.user)];
+                    User.find({_id: {$in: ids}})
+                        .then(user => res.json(user))
                 }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
     });
 
@@ -191,7 +201,10 @@ router.get(
                     if (!user) {
                         return res.status(400).json({errors: {nouser: "your are not a user"}})
                     }
-                    res.json(user.follwoers)
+                    let ids = [...user.follwoing.map(follow => follow.user)];
+                    User.find({_id: {$in: ids}})
+                        .then(user => res.json([...user])
+                        )
                 }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
     });
 

@@ -39,7 +39,7 @@ class Follwers extends Component {
                                 </div>
                                 <div className="col-md-10">
                                     <p className="lead">
-                                        {follower.user}
+                                        {follower.name}
                                     </p>
                                     <div className="row">
                                         <div className="col-md-4">

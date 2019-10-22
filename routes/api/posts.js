@@ -36,11 +36,11 @@ router.post('/',
 router.get('/',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        console.log(req.user.id);
         User.findById(req.user.id)
             .then(user => {
                     let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
-                    Post.aggregate([{$match: {user: {$in: ids}}}])
+                console.log(ids);
+                Post.aggregate([{$match: {user: {$in: ids}}}])
                         .then(post => {
                             if (!post) {
                                 res.status(404).json({noPosts: "there is no posts"})

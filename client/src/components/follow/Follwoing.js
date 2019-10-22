@@ -14,13 +14,13 @@ class Follwoing extends Component {
     render() {
         const {following,loading} = this.props.follow;
         const {auth} = this.props;
+        console.log(following);
         let followongItem;
         if (following === null || loading) {
             followongItem = <Spinner/>
         } else {
             if (following.length > 0) {
                 followongItem = following.map(follow => {
-                    console.log(follow);
                     return (
                         <div className="card card-body mb-3">
                             <div className="row">
@@ -36,7 +36,7 @@ class Follwoing extends Component {
                                 </div>
                                 <div className="col-md-10">
                                     <p className="lead">
-                                        {follow.user}
+                                        {follow.name}
                                     </p>
                                     <div className="row">
                                         <div className="col-md-4">
@@ -51,7 +51,7 @@ class Follwoing extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <Link to={"/follwoing"} className="btn btn-lg btn-danger mr-1"
-                                                  onClick={this.props.unFollowingUserPage.bind(this, auth.user.id, follow.user)}
+                                                  onClick={this.props.unFollowingUserPage.bind(this, auth.user.id, follow._id)}
                                             >
                                                 unfollow
                                             </Link>
