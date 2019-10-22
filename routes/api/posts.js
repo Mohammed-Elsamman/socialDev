@@ -34,15 +34,23 @@ router.post('/',
 // @desc    get all post
 // @access  private
 router.get('/',
+    passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        Post.find()
-            .then(post => {
-                if (!post) {
-                    res.status(404).json({noPosts: "there is no posts"})
+        console.log(req.user.id);
+        User.findById(req.user.id)
+            .then(user => {
+                    let ids = [...user.follwoing.map(follow => follow.user),req.user._id];
+                Post.aggregate([{$match: {user: {$in: ids}}}])
+                        .then(post => {
+                            if (!post) {
+                                res.status(404).json({noPosts: "there is no posts"})
+                            }
+                            res.json(post)
+                        })
+                        .catch(err => res.status(404).json(err))
                 }
-                res.json(post)
-            })
-            .catch(err => res.status(404).json(err))
+            ).catch(err => err)
+
     }
 );
 
