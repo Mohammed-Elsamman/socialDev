@@ -26,6 +26,7 @@ import Posts from "./components/posts/Posts";
 import Post from "./components/post/Post";
 import Follwoing from "./components/follow/Follwoing";
 import Follwoers from "./components/follow/Follwoers";
+import UserPage from "./components/user-page/UserPage";
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -64,6 +65,9 @@ class App extends Component {
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/feed" component={Posts}/>
+                            </Switch>
+                            <Switch>
+                                <PrivateRoute exact path="/my-page" component={UserPage}/>
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/follwoing" component={Follwoing}/>

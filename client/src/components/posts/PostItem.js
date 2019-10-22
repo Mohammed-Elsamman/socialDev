@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import {deletePost, addLike, removeLike} from "../../actions/postActions";
+import CommentFeed from "../post/CommentFeed";
 
 class PostItem extends Component {
 
@@ -33,7 +34,7 @@ class PostItem extends Component {
         const {post, auth, showActions} = this.props;
         return (
             <div className="card card-body mb-3">
-                <div className="row">
+                <div className="row mb-3">
                     <div className="col-md-2">
                         <Link to="">
                             <img
@@ -81,8 +82,8 @@ class PostItem extends Component {
                             </span>
                         ) : null}
                     </div>
-                </div>
 
+                </div>
             </div>
         );
     }

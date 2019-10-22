@@ -33,10 +33,6 @@ class Profile extends Component {
         if (profile === null || loading) {
             ProfileContent = <Spinner/>
         } else {
-
-            console.log(profile.user._id);
-            console.log(auth.user.id);
-
             {
                 profile.user._id === auth.user.id ? (
                     myPage =

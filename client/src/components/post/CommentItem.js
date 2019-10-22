@@ -26,16 +26,20 @@ class CommentItem extends Component {
                         <br/>
                         <p className="text-center">{comment.name}</p>
                     </div>
-                    <div className="col-md-10">
-                        <p className="lead">
-                            {comment.text}
-                        </p>
+                    <div className="col-md-10 row">
+                        <div className="col-11">
+                            <p className="lead">
+                                {comment.text}
+                            </p>
+                        </div>
                         {comment.user === auth.user.id ? (
-                            <button className="btn btn-danger mr-1"
-                                    onClick={this.onClickDelete.bind(this, postId, comment._id)}
-                            >
-                                <i className="fas fa-times"/>
-                            </button>
+                                <div>
+                                    <button className="btn btn-danger  mr-1"
+                                            onClick={this.onClickDelete.bind(this, postId, comment._id)}
+                                    >
+                                        <i className="fas fa-times"/>
+                                    </button>
+                                </div>
                         ) : null}
                     </div>
                 </div>

@@ -39,8 +39,8 @@ router.get('/',
         console.log(req.user.id);
         User.findById(req.user.id)
             .then(user => {
-                    let ids = [...user.follwoing.map(follow => follow.user),req.user._id];
-                Post.aggregate([{$match: {user: {$in: ids}}}])
+                    let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
+                    Post.aggregate([{$match: {user: {$in: ids}}}])
                         .then(post => {
                             if (!post) {
                                 res.status(404).json({noPosts: "there is no posts"})
@@ -62,6 +62,7 @@ router.get('/my_post',
     (req, res) => {
         Post.find({user: req.user.id})
             .then(post => {
+                console.log(post);
                 if (!post) {
                     return res.status(404).json({nopst: "there is no post for that user"})
                 }
