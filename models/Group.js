@@ -11,7 +11,7 @@ const groupSchema = new Schema({
         type: String,
         require: true
     },
-    Managers: [
+    managers: [
         {
             user: {
                 type: Schema.Types.ObjectId,

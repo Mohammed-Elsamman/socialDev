@@ -9,7 +9,7 @@ module.exports = validateGroupInput = data => {
     data.interestedin = !isEmpty(data.interestedin) ? data.interestedin : "";
 
     if (validator.isEmpty(data.name)) {
-        errors.text = "name is required"
+        errors.name = "name is required"
     }
     if (validator.isEmpty(data.description)) {
         errors.description = "description is required"

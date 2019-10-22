@@ -13,4 +13,6 @@ export const DELETE_POST = 'DELETE_POST';
 export const POST_LOADING = 'POST_LOADING';
 export const GET_FOLLOWING = 'GET_FOLLOWING';
 export const GET_FOLLOWERS = 'GET_FOLLOWERS';
-
+export const GET_GROUP = 'GET_GROUP';
+export const GET_GROUPS = 'GET_GROUPS';
+export const ADD_GROUP = 'ADD_GROUP';

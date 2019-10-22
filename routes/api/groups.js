@@ -16,18 +16,18 @@ router.post('/',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
         console.log(req.body);
+        console.log(req.body);
         const {errors, isValid} = validateGroupInput(req.body);
         if (!isValid) {
             return res.status(404).json({errors})
-        }
-        if (typeof req.body.interestedin !== "undefined") {
-            profileFields.interestedin = req.body.interestedin.split(',');
         }
         const newGroup = new Group({
             description: req.body.description,
             name: req.body.name,
             interestedin: req.body.interestedin.split(','),
             user: req.user.id,
+            members: [req.user._id],
+            managers: [req.user._id],
         });
         newGroup.save().then(post => res.json(post))
     }
@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
             }
             res.json(groups);
         })
-        .catch(err => res.status(404).json({ profile: 'There are no profiles' }));
+        .catch(err => res.status(404).json({profile: 'There are no profiles'}));
 });
 
 
