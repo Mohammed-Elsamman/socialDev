@@ -26,7 +26,6 @@ router.post('/',
             avatar: req.body.avatar,
             user: req.user.id,
         });
-        console.log(newPost);
         newPost.save().then(post => res.json(post))
     }
 );
@@ -162,7 +161,6 @@ router.post('/comment/:id',
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        console.log(req.params.id);
         Post.findById(req.params.id)
             .then(post => {
                 if (!post) {
@@ -183,7 +181,6 @@ router.delete('/:id',
 router.delete('/comment/:id/:cid',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        console.log(req.params.id);
         Post.findById(req.params.id)
             .then(post => {
                 if (!post) {

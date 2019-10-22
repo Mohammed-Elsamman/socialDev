@@ -3,16 +3,44 @@ import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import isEmpty from "../../validation/is-empty";
+import {followingUser, unFollowingUser} from "../../actions/followActions";
 
 class ProfileItem extends Component {
 
     render() {
-        const {profile} = this.props
+        const {profile, auth} = this.props;
+        let followButton;
+        if (profile.user.follwoers.length === 0) {
+            followButton = (
+                <button
+                    onClick={this.props.followingUser.bind(this, auth.user.id, profile.user._id)}
+                    className="btn btn-danger">
+                    follow
+                </button>
+            )
+        } else {
+            followButton = profile.user.follwoers.map(follow =>
+                < button key={follow._id}
+                         onClick={this.props.unFollowingUser.bind(this, auth.user.id, profile.user._id)}
+                         className="btn btn-danger">
+                    unfollow
+                </button>
+            )
+        }
         return (
             <div className="card card-body bg-light mb-3">
                 <div className="row">
                     <div className="col-2">
-                        <img src={profile.user.avatar} alt={profile.user.name} className="rounded-circle"/>
+                        <div>
+                            {profile.user._id === auth.user.id ? null : (
+                                <div>
+                                    {followButton}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <img src={profile.user.avatar} alt={profile.user.name} className="rounded-circle"/>
+                        </div>
                     </div>
                     <div className="col-lg-6 col-md-4 col-8">
                         <h3>{profile.user.name}</h3>
@@ -33,10 +61,10 @@ class ProfileItem extends Component {
                     <div className="col-md-4 d-none d-md-block">
                         <h4>Skills Set</h4>
                         <ul className="list-group">
-                            {profile.skills.slice(0,4).map((skill,index)=>(
+                            {profile.skills.slice(0, 4).map((skill, index) => (
                                 <li key={index} className="list-group-item">
                                     <i className="fa fa-check pr-1"/>
-                                        {skill}
+                                    {skill}
                                 </li>
                             ))}
                         </ul>
@@ -48,13 +76,17 @@ class ProfileItem extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {};
-}
+const mapStateToProps = state => ({
+    auth: state.auth,
+})
 ProfileItem.propTypes = {
-    profile:PropTypes.object.isRequired
+    followingUser: PropTypes.func.isRequired,
+    unFollowingUser: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
 };
 
 export default connect(
     mapStateToProps,
+    {followingUser, unFollowingUser}
 )(ProfileItem);

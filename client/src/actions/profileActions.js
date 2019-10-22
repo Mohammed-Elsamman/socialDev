@@ -1,5 +1,13 @@
 import axios from 'axios'
-import {GET_PROFILE,GET_PROFILES, PROFILE_LOADING, GET_ERRORS, CLEAR_CURRENT_PROFILE, SET_CURRENT_USER} from "./types";
+import {
+    GET_PROFILE,
+    GET_PROFILES,
+    PROFILE_LOADING,
+    GET_ERRORS,
+    CLEAR_CURRENT_PROFILE,
+    SET_CURRENT_USER,
+    GET_POST
+} from "./types";
 
 //get current profile
 export const getCurrentProfile = () => dispatch => {
@@ -95,7 +103,6 @@ export const clearCurrentProfile = () => {
 };
 
 
-
 //Add Experience
 export const addExperience = (profileDate, history) => dispatch => {
     axios.post("/api/profile/experience", profileDate)
@@ -154,3 +161,4 @@ export const deleteEducation = edu_id => dispatch => {
         )
     }
 };
+

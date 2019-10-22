@@ -73,19 +73,21 @@ router.get("/user/:user_id", (req, res) => {
 
 
 // @route   GET api/profile/all
-// @desc    get all profile
-// @access  public
-router.get("/all", (req, res) => {
+// @desc    Get all profiles
+// @access  Public
+router.get('/all', (req, res) => {
     const errors = {};
+
     Profile.find()
+        .populate('user', ['name', 'avatar','follwoers'])
         .then(profiles => {
             if (!profiles) {
-                errors.noprofile = "there is no profile for this user"
-                res.status(404).json(errors)
+                errors.noprofile = 'There are no profiles';
+                return res.status(404).json(errors);
             }
-            res.json(profiles)
+            res.json(profiles);
         })
-        .catch(err => res.status(404).json("there is no profiles"))
+        .catch(err => res.status(404).json({ profile: 'There are no profiles' }));
 });
 
 // @route   POST api/profile/

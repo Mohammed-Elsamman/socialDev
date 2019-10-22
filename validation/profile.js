@@ -45,7 +45,6 @@ module.exports = validateProfileInput = data => {
     if (!isEmpty(data.linkedin)) {
         console.log(data.linkedin)
         if (!validator.isURL(data.linkedin)) {
-            console.log("1111111111111111111111111")
             errors.linkedin = "not a valied URL"
         }
     }

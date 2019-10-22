@@ -8,6 +8,7 @@ import ProfileAbout from "./ProfileAbout";
 import ProfileHeader from "./ProfileHeader";
 import ProfileCreds from "./ProfileCreds";
 import ProfileGithub from "./ProfileGithub";
+import isEmpty from "../../validation/is-empty";
 
 
 class Profile extends Component {
@@ -24,10 +25,40 @@ class Profile extends Component {
 
     render() {
         const {profile, loading} = this.props.profile;
+        const {auth} = this.props;
+
+
         let ProfileContent;
+        let myPage;
         if (profile === null || loading) {
             ProfileContent = <Spinner/>
         } else {
+
+            console.log(profile.user._id);
+            console.log(auth.user.id);
+
+            {
+                profile.user._id === auth.user.id ? (
+                    myPage =
+                        <div className="row">
+                            <div className="col-md-4 mb-3 ">
+                                <div className="card">
+                                    <Link to="/follwoers" className="btn btn-info">
+                                        follwoers
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="col-md-4 mb-3 "></div>
+                            <div className="col-md-4 mb-3">
+                                <div className="card">
+                                    <Link to="/follwoing" className="btn btn-info">
+                                        follwoing
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                ) : null
+            }
             ProfileContent = (
                 <div>
                     <div className="row">
@@ -40,6 +71,7 @@ class Profile extends Component {
                     </div>
 
                     <ProfileHeader profile={profile}/>
+                    {myPage}
                     <ProfileAbout profile={profile}/>
                     <ProfileCreds education={profile.education} experience={profile.experience}/>
                     {profile.githubusername ? (
@@ -49,6 +81,7 @@ class Profile extends Component {
                     }
                 </div>
             )
+
         }
         return (
             <div className="profile">
@@ -66,11 +99,13 @@ class Profile extends Component {
 
 Profile.propTypes = {
     profile: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
     getProfileByHandel: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-    profile: state.profile
+    profile: state.profile,
+    auth: state.auth
 });
 
 export default connect(
