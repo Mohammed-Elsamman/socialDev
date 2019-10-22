@@ -6,6 +6,7 @@ const passport = require("passport");
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
 const post = require('./routes/api/posts');
+const group = require('./routes/api/groups')
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -32,6 +33,7 @@ require("./config/passport")(passport);
 app.use("/api/user", users);
 app.use("/api/profile", profile);
 app.use("/api/post", post);
+app.use("/api/group", group);
 
 const port = process.env.PORT || 5000;
 

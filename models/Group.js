@@ -40,7 +40,7 @@ const groupSchema = new Schema({
         require: true
     },
     interestedin: {
-        type: Array,
+        type: [String],
         require: true
     },
     date: {
