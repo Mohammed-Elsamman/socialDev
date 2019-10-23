@@ -20,12 +20,15 @@ router.post('/',
         if (!isValid) {
             return res.status(404).json({errors})
         }
+        console.log(req.body);
         const newPost = new Post({
             text: req.body.text,
             name: req.body.name,
             avatar: req.body.avatar,
             user: req.user.id,
+            group: req.body.group,
         });
+        console.log(newPost);
         newPost.save().then(post => res.json(post))
     }
 );
@@ -39,8 +42,8 @@ router.get('/',
         User.findById(req.user.id)
             .then(user => {
                     let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
-                console.log(ids);
-                Post.aggregate([{$match: {user: {$in: ids}}}])
+                    console.log(ids);
+                    Post.aggregate([{$match: {user: {$in: ids}}}])
                         .then(post => {
                             if (!post) {
                                 res.status(404).json({noPosts: "there is no posts"})

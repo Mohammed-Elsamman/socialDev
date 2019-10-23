@@ -64,7 +64,7 @@ class Group extends Component {
                     <div className="row">
                         <div className="col-md-12">
                             {ProfileContent}
-                            <PostForm/>
+                            <PostForm idPG={this.props.match.params.name}/>
                         </div>
                     </div>
                 </div>
