@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {deleteGroup, geGroup} from "../../actions/groupActions";
+import {deleteGroup, geGroup,askToJoinGroup,cancelToJoinGroup} from "../../actions/groupActions";
 import isEmpty from "../../validation/is-empty";
 
 class GroupsItem extends Component {
@@ -10,8 +10,18 @@ class GroupsItem extends Component {
     render() {
         const {group, auth} = this.props;
         let joinButton;
-        let memperIDs = group.members.map(member => member.user);
-        let requestIDs = group.requests.map(member => member.user);
+        let memperIDs = [];
+        let requestIDs = [];
+        let managerIDs = [];
+        if (group.members) {
+            memperIDs = group.members.map(member => member.user);
+        }
+        if (group.managers) {
+            managerIDs = group.managers.map(member => member.user);
+        }
+        if (group.requests) {
+            requestIDs = group.requests.map(member => member.user);
+        }
         if (group.user === auth.user.id) {
             joinButton = (
                 <button
@@ -29,11 +39,17 @@ class GroupsItem extends Component {
                 </button>
             )
         } else if (requestIDs.indexOf(auth.user.id) >= 0) {
-            joinButton = null
+            joinButton = (
+                <button
+                    onClick={this.props.cancelToJoinGroup.bind(this,  group._id,auth.user.id)}
+                    className="btn btn-danger">
+                    cancel the request
+                </button>
+            )
         } else {
             joinButton = (
                 <button
-                    // onClick={this.props.followingUser.bind(this, auth.user.id, group.user._id)}
+                    onClick={this.props.askToJoinGroup.bind(this,  group._id,auth.user.id)}
                     className="btn btn-info">
                     Join The Group
                 </button>
@@ -44,13 +60,10 @@ class GroupsItem extends Component {
             <div className="card card-body bg-light mb-3">
                 <div className="row">
                     <div className="col-lg-6 col-md-4 col-8">
-                        <h3>Name:
-                            <Link to={`/groups/${group._id}`}
-                                  onClick={this.props.geGroup.bind(this, group._id)}
-                            >
-                                {group.name}
-
-                            </Link>
+                        <h3>
+                            Name: <Link to={`/groups/${group._id}`} onClick={this.props.geGroup.bind(this, group._id)}>
+                            {group.name}
+                        </Link>
                         </h3>
                         <p>
                             Description: {group.description}
@@ -60,19 +73,24 @@ class GroupsItem extends Component {
                         </div>
                     </div>
                     <div className="col-md-2">
-                        <p>Members: {group.members.length}</p>
-                        <p>Managers: {group.managers.length}</p>
+                        <p>Members: {memperIDs.length}</p>
+                        <p>Managers: {managerIDs.length}</p>
                     </div>
                     <div className="col-md-4 d-none d-md-block">
-                        <h4>Interestedin</h4>
-                        <ul className="list-group">
-                            {group.interestedin.slice(0, 4).map((skill, index) => (
-                                <li key={index} className="list-group-item">
-                                    <i className="fa fa-check pr-1"/>
-                                    {skill}
-                                </li>
-                            ))}
-                        </ul>
+                        {group.interestedin ? (
+                            <div>
+                                <h4>Interestedin</h4>
+                                <ul className="list-group">
+                                    {group.interestedin.slice(0, 4).map((skill, index) => (
+                                        <li key={index} className="list-group-item">
+                                            <i className="fa fa-check pr-1"/>
+                                            {skill}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : null}
+
                     </div>
                 </div>
             </div>
@@ -87,11 +105,13 @@ const mapStateToProps = state => ({
 GroupsItem.propTypes = {
     deleteGroup: PropTypes.func.isRequired,
     geGroup: PropTypes.func.isRequired,
+    askToJoinGroup: PropTypes.func.isRequired,
+    cancelToJoinGroup: PropTypes.func.isRequired,
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
 };
 
 export default connect(
     mapStateToProps,
-    {deleteGroup, geGroup}
+    {deleteGroup, geGroup,askToJoinGroup,cancelToJoinGroup}
 )(GroupsItem);

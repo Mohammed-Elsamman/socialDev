@@ -9,7 +9,7 @@ const validateGroupInput = require("../../validation/group");
 router.get('/test', (req, res) => res.json({msg: "group is works"}));
 
 
-// @route   POST api/group/
+// @route   POST /api/groups/
 // @desc    create group
 // @access  private
 router.post('/',
@@ -19,7 +19,6 @@ router.post('/',
         if (!isValid) {
             return res.status(404).json({errors})
         }
-        console.log(typeof req.user.id);
         const newGroup = new Group({
             description: req.body.description,
             name: req.body.name,
@@ -35,54 +34,39 @@ router.post('/',
     }
 );
 
-// @route   GET api/group/
+// @route   GET /api/groups/
 // @desc    get all groups
 // @access  private
 router.get('/',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        const errors = {};
-
         Group.find()
-            .then(groups => {
-                if (!groups) {
-                    errors.nogroup = 'There are no profiles';
-                    return res.status(404).json(errors);
-                }
-                res.json(groups);
-            })
+            .then(groups => res.json(groups))
             .catch(err => res.status(404).json({profile: 'There are no profiles'}));
     });
 
-// @route   GET api/group/
+// @route   GET /api/groups/
 // @desc    get my groups
 // @access  private
 router.get('/:id',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        const errors = {};
         Group.find({
             $or: [
                 {
                     user: req.params.id
                 },
                 {
-                    "members.user": {$eq: req.params.id}
+                    "members.user": req.params.id
                 }
             ]
         })
-            .then(groups => {
-                if (!groups) {
-                    errors.nogroup = 'There are no groups';
-                    return res.status(404).json(errors);
-                }
-                res.json(groups);
-            })
-            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+            .then(groups => res.json(groups))
+            .catch(err => res.status(404).json({goodluck: 'You are not a user, join us'}));
     });
 
 
-// @route   GET api/group/:id
+// @route   GET /api/groups/:id
 // @desc    get group by id
 // @access  private
 router.get('/group/:id',
@@ -96,7 +80,7 @@ router.get('/group/:id',
     });
 
 
-// @route   DELETE api/group/:id
+// @route   DELETE /api/groups/:id
 // @desc    delete group
 // @access  private
 router.delete('/:id',
@@ -110,7 +94,7 @@ router.delete('/:id',
     });
 
 
-// @route   GET api/group/post/:id
+// @route   GET /api/groups/post/:id
 // @desc    get all post of group
 // @access  private
 router.get('/post/:id',
@@ -124,5 +108,33 @@ router.get('/post/:id',
 )
 
 
+// @route   GET /api/groups/askjoin/:id/:uid
+// @desc    send request to join a group
+// @access  private
+router.post('/askjoin/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.requests.push({user: req.params.uid})
+                return group.save(group => res.json(group))
+            }).catch(err => err)
+    }
+)
+
+
+// @route   GET /api/groups/cancel/:id/:uid
+// @desc    cancel request to join a group
+// @access  private
+router.post('/cancel/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.requests = group.requests.filter(request => request.user != req.params.uid)
+                return group.save(group => res.json(group))
+            }).catch(err => err)
+    }
+)
 
 module.exports = router;
