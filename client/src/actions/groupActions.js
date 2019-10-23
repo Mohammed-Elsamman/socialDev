@@ -44,6 +44,22 @@ export const getMyGroups = id => dispatch => {
     )
 };
 
+//get group by id
+export const geGroup = id => dispatch => {
+    console.log(id);
+    axios.get(`/api/group/group/${id}`)
+        .then(res => dispatch({
+                type: GET_GROUP,
+                payload: res.data
+            })
+        ).catch(err =>
+        dispatch({
+            type: GET_GROUP,
+            payload: null
+        })
+    )
+};
+
 //delete a group
 export const deleteGroup = id => dispatch => {
     console.log(id);

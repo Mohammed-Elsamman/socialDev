@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {deleteGroup} from "../../actions/groupActions";
+import {deleteGroup, geGroup} from "../../actions/groupActions";
 import isEmpty from "../../validation/is-empty";
 
 class GroupsItem extends Component {
@@ -45,10 +45,12 @@ class GroupsItem extends Component {
                 <div className="row">
                     <div className="col-lg-6 col-md-4 col-8">
                         <h3>Name:
-                           <Link to={"/"}>
-                               {group.name}
+                            <Link to={`/groups/${group._id}`}
+                                  onClick={this.props.geGroup.bind(this, group._id)}
+                            >
+                                {group.name}
 
-                           </Link>
+                            </Link>
                         </h3>
                         <p>
                             Description: {group.description}
@@ -84,11 +86,12 @@ const mapStateToProps = state => ({
 })
 GroupsItem.propTypes = {
     deleteGroup: PropTypes.func.isRequired,
+    geGroup: PropTypes.func.isRequired,
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
 };
 
 export default connect(
     mapStateToProps,
-    {deleteGroup}
+    {deleteGroup, geGroup}
 )(GroupsItem);

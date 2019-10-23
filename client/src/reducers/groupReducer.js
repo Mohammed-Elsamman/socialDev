@@ -9,6 +9,7 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case GET_GROUP:
+            console.log(action.payload);
             return {
                 ...state,
                 group: action.payload,

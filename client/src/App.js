@@ -29,6 +29,7 @@ import Follwoers from "./components/follow/Follwoers";
 import UserPage from "./components/user-page/UserPage";
 import CreateGroup from "./components/create-edit-group/CreateGroup";
 import Groups from "./components/Groups/Groups";
+import Group from "./components/Group/Group";
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -88,6 +89,9 @@ class App extends Component {
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/groups" component={Groups}/>
+                            </Switch>
+                            <Switch>
+                                <PrivateRoute exact path="/groups/:name" component={Group}/>
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/create-profile" component={CreateProfile}/>

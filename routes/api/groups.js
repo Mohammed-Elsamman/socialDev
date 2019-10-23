@@ -41,18 +41,18 @@ router.post('/',
 router.get('/',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-    const errors = {};
+        const errors = {};
 
-    Group.find()
-        .then(groups => {
-            if (!groups) {
-                errors.nogroup = 'There are no profiles';
-                return res.status(404).json(errors);
-            }
-            res.json(groups);
-        })
-        .catch(err => res.status(404).json({profile: 'There are no profiles'}));
-});
+        Group.find()
+            .then(groups => {
+                if (!groups) {
+                    errors.nogroup = 'There are no profiles';
+                    return res.status(404).json(errors);
+                }
+                res.json(groups);
+            })
+            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+    });
 
 // @route   GET api/group/
 // @desc    get my groups
@@ -83,19 +83,31 @@ router.get('/:id',
 
 
 // @route   GET api/group/:id
-// @desc    get all groups
+// @desc    get group by id
+// @access  private
+router.get('/group/:id',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        const errors = {};
+
+        Group.findById(req.params.id)
+            .then(group => res.json(group))
+            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+    });
+
+
+// @route   DELETE api/group/:id
+// @desc    delete group
 // @access  private
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        console.log(11111111111111111111111111111111111);
-        Group.findOneAndDelete({_id:req.params.id})
-        .then(group => {
-            res.json(true);
-        })
-        .catch(err => res.status(404).json({profile: 'There are no profiles'}));
-});
-
+        Group.findOneAndDelete({_id: req.params.id})
+            .then(group => {
+                res.json(true);
+            })
+            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+    });
 
 
 module.exports = router;
