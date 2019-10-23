@@ -1,4 +1,4 @@
-import {GET_GROUP,GET_GROUPS,ADD_GROUP} from "../actions/types";
+import {GET_GROUP,GET_GROUPS,GET_POSTS,ADD_GROUP} from "../actions/types";
 
 const initialState = {
     group: null,
@@ -16,6 +16,12 @@ export default function (state = initialState, action) {
                 loading: false
             };
         case GET_GROUPS:
+            return {
+                ...state,
+                groups: action.payload,
+                loading: false
+            };
+        case GET_POSTS:
             return {
                 ...state,
                 groups: action.payload,

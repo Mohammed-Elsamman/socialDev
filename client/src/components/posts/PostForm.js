@@ -10,7 +10,7 @@ class PostForm extends Component {
         this.state = {
             text: "",
             errors: {}
-        }
+        };
         this.onSubmit = this.onSubmit.bind(this)
         this.onChange = this.onChange.bind(this)
     }
@@ -24,7 +24,6 @@ class PostForm extends Component {
     onSubmit(e) {
         e.preventDefault();
         const {idPG} = this.props;
-        console.log(idPG);
         const {user} = this.props.auth;
         const newPost = {
             text: this.state.text,

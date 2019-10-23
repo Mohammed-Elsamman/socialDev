@@ -110,4 +110,19 @@ router.delete('/:id',
     });
 
 
+// @route   GET api/group/post/:id
+// @desc    get all post of group
+// @access  private
+router.get('/post/:id',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Post.find({group: req.params.id})
+            .then(post => {
+                res.json(post)
+            }).catch(err => err)
+    }
+)
+
+
+
 module.exports = router;

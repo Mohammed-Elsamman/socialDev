@@ -4,7 +4,8 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {geGroup} from "../../actions/groupActions";
+import PostFeed from "../posts/PostFeed";
+import {geGroup, getGroupPosts} from "../../actions/groupActions";
 import PostForm from "../posts/PostForm";
 
 class Group extends Component {
@@ -12,6 +13,7 @@ class Group extends Component {
         console.log(this.props);
         if (this.props.match.params.name)
             this.props.geGroup(this.props.match.params.name)
+        this.props.getGroupPosts(this.props.match.params.name)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -22,10 +24,18 @@ class Group extends Component {
 
     render() {
         const {group, loading} = this.props.group;
+        const {posts} = this.props.post;
+        const loadingPost = this.props.post.loading
+        console.log(posts);
         const {auth} = this.props;
-        console.log(group);
         let ProfileContent;
+        let postContent;
         let myPage;
+        if (posts.length === 0 || loadingPost) {
+            postContent = <Spinner/>
+        } else {
+            postContent = <PostFeed posts={posts}/>
+        }
         if (group === null || loading) {
             ProfileContent = <Spinner/>
         } else {
@@ -65,6 +75,7 @@ class Group extends Component {
                         <div className="col-md-12">
                             {ProfileContent}
                             <PostForm idPG={this.props.match.params.name}/>
+                            {postContent}
                         </div>
                     </div>
                 </div>
@@ -75,16 +86,19 @@ class Group extends Component {
 
 Group.propTypes = {
     group: PropTypes.object.isRequired,
+    post: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    geGroup: PropTypes.func.isRequired
+    getGroupPosts: PropTypes.func.isRequired,
+    geGroup: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     group: state.group,
+    post: state.post,
     auth: state.auth
 });
 
 export default connect(
     mapStateToProps,
-    {geGroup}
+    {geGroup, getGroupPosts}
 )(Group);
