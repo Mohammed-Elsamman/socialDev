@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {deleteGroup} from "../../actions/groupActions";
 import isEmpty from "../../validation/is-empty";
 
 class GroupsItem extends Component {
@@ -14,7 +15,7 @@ class GroupsItem extends Component {
         if (group.user === auth.user.id) {
             joinButton = (
                 <button
-                    // onClick={this.props.followingUser.bind(this, auth.user.id, group.user._id)}
+                    onClick={this.props.deleteGroup.bind(this, group._id)}
                     className="btn btn-danger">
                     Delete The Group
                 </button>
@@ -82,10 +83,12 @@ const mapStateToProps = state => ({
     auth: state.auth,
 })
 GroupsItem.propTypes = {
+    deleteGroup: PropTypes.func.isRequired,
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
 };
 
 export default connect(
     mapStateToProps,
+    {deleteGroup}
 )(GroupsItem);

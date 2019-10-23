@@ -44,6 +44,16 @@ export const getMyGroups = id => dispatch => {
     )
 };
 
+//delete a group
+export const deleteGroup = id => dispatch => {
+    console.log(id);
+    axios.delete(`/api/group/${id}`)
+        .then(res => dispatch(getGroups())
+        ).catch(err =>
+        dispatch(getGroups())
+    )
+};
+
 
 
 

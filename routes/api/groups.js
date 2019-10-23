@@ -35,11 +35,14 @@ router.post('/',
     }
 );
 
-// @route   GET api/post/
+// @route   GET api/group/
 // @desc    get all groups
 // @access  private
-router.get('/', (req, res) => {
+router.get('/',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
     const errors = {};
+
     Group.find()
         .then(groups => {
             if (!groups) {
@@ -51,7 +54,7 @@ router.get('/', (req, res) => {
         .catch(err => res.status(404).json({profile: 'There are no profiles'}));
 });
 
-// @route   GET api/post/
+// @route   GET api/group/
 // @desc    get my groups
 // @access  private
 router.get('/:id',
@@ -77,6 +80,22 @@ router.get('/:id',
             })
             .catch(err => res.status(404).json({profile: 'There are no profiles'}));
     });
+
+
+// @route   GET api/group/:id
+// @desc    get all groups
+// @access  private
+router.delete('/:id',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        console.log(11111111111111111111111111111111111);
+        Group.findOneAndDelete({_id:req.params.id})
+        .then(group => {
+            res.json(true);
+        })
+        .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+});
+
 
 
 module.exports = router;
