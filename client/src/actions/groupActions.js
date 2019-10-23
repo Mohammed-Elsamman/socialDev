@@ -75,7 +75,6 @@ export const deleteGroup = id => dispatch => {
 // Get Group Posts
 export const getGroupPosts = id => dispatch => {
     dispatch(setPostLoading());
-    console.log(id);
     axios.get(`/api/group/post/${id}`)
         .then(res =>
             dispatch({

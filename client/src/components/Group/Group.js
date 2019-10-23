@@ -26,7 +26,6 @@ class Group extends Component {
         const {group, loading} = this.props.group;
         const {posts} = this.props.post;
         const loadingPost = this.props.post.loading
-        console.log(posts);
         const {auth} = this.props;
         let ProfileContent;
         let postContent;

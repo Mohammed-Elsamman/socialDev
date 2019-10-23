@@ -13,12 +13,12 @@ class PostItem extends Component {
 
     }
 
-    onClickLike(postId) {
-        this.props.addLike(postId)
+    onClickLike(postId,groupId) {
+        this.props.addLike(postId,groupId)
     }
 
-    onClickUnlike(postId) {
-        this.props.removeLike(postId)
+    onClickUnlike(postId,groupId) {
+        this.props.removeLike(postId,groupId)
     }
 
     findUserLike(likes) {
@@ -32,6 +32,10 @@ class PostItem extends Component {
 
     render() {
         const {post, auth, showActions} = this.props;
+        let groupId = false;
+        if(post.group){
+            groupId = post.group
+        };
         return (
             <div className="card card-body mb-3">
                 <div className="row mb-3">
@@ -54,7 +58,7 @@ class PostItem extends Component {
                             <span>
                         <button type="button"
                                 className="btn btn-light mr-1"
-                                onClick={this.onClickLike.bind(this, post._id)}
+                                onClick={this.onClickLike.bind(this, post._id,groupId)}
                         >
                             <i className={classnames("fas fa-thumbs-up", {
                                 "text-info": this.findUserLike(post.likes)
@@ -64,7 +68,7 @@ class PostItem extends Component {
                             </span>
                         </button>
                         <button type="button" className="btn btn-light mr-1"
-                                onClick={this.onClickUnlike.bind(this, post._id)}
+                                onClick={this.onClickUnlike.bind(this, post._id,groupId)}
                         >
                             <i className="text-secondary fas fa-thumbs-down"/>
                         </button>

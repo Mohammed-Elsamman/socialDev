@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {ADD_POST, GET_POST, GET_POSTS, DELETE_POST, POST_LOADING, GET_ERRORS, CLEAR_ERRORS} from "./types";
-
+import {getGroupPosts} from "./groupActions";
 // Add Post
 export const addPost = postData => dispatch => {
     dispatch(clearErrors());
@@ -94,9 +94,15 @@ export const deletePost = (post_id) => dispatch => {
 };
 
 //LIKE POST
-export const addLike = post_id => dispatch => {
+export const addLike = (post_id, groupId) => dispatch => {
     axios.post(`/api/post/like/${post_id}`)
-        .then(res => dispatch(getPosts()))
+        .then(res => {
+            if (groupId) {
+                return dispatch(getGroupPosts(groupId))
+            } else {
+                return dispatch(getPosts())
+            }
+        })
         .catch(err =>
             dispatch({
                 type: GET_ERRORS,
@@ -106,10 +112,15 @@ export const addLike = post_id => dispatch => {
 };
 
 //UNLIKE POST
-export const removeLike = (post_id) => dispatch => {
+export const removeLike = (post_id, groupId) => dispatch => {
     axios.delete(`/api/post/unlike/${post_id}`,)
-        .then(res =>
-            dispatch(getPosts()))
+        .then(res => {
+            if (groupId) {
+                return dispatch(getGroupPosts(groupId))
+            } else {
+                return dispatch(getPosts())
+            }
+        })
         .catch(err =>
             dispatch({
                 type: GET_ERRORS,
