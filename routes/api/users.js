@@ -201,9 +201,9 @@ router.get(
                     if (!user) {
                         return res.status(400).json({errors: {nouser: "your are not a user"}})
                     }
-                    let ids = [...user.follwoing.map(follow => follow.user)];
+                    let ids = [...user.follwoers.map(follower => follower.user)];
                     User.find({_id: {$in: ids}})
-                        .then(user => res.json([...user])
+                        .then(user => res.json(user)
                         )
                 }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
     });

@@ -19,7 +19,7 @@ const groupSchema = new Schema({
             }
         }
     ],
-    resquests: [
+    requests: [
         {
             user: {
                 type: Schema.Types.ObjectId,

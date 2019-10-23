@@ -44,8 +44,6 @@ class CreateGroup extends Component {
 
   render() {
     const { errors } = this.state;
-
-
     return (
       <div className="create-profile">
         <div className="container">

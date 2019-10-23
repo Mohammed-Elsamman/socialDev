@@ -15,6 +15,7 @@ export default function (state = initialState, action) {
                 loading: false
             };
         case GET_GROUPS:
+            console.log(action.payload);
             return {
                 ...state,
                 groups: action.payload,
