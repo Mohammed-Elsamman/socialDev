@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {geGroupMembers, createAdmin, deleteAdmin} from "../../actions/groupActions";
+import {getGroupMembers, createAdmin, deleteAdmin} from "../../actions/groupActions";
 
 
 class GroupMembers extends Component {
     componentDidMount() {
-        this.props.geGroupMembers(this.props.match.params.id)
+        this.props.getGroupMembers(this.props.match.params.id)
     }
 
     render() {
@@ -257,7 +257,7 @@ class GroupMembers extends Component {
 GroupMembers.propTypes = {
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    geGroupMembers: PropTypes.func.isRequired,
+    getGroupMembers: PropTypes.func.isRequired,
     createAdmin: PropTypes.func.isRequired,
     deleteAdmin: PropTypes.func.isRequired,
 };
@@ -270,5 +270,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {geGroupMembers, createAdmin, deleteAdmin}
+    {getGroupMembers, createAdmin, deleteAdmin}
 )(GroupMembers);

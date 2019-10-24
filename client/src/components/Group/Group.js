@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
 import PostFeed from "../posts/PostFeed";
-import {geGroup, getGroupPosts, askToJoinGroup, cancelToJoinGroup} from "../../actions/groupActions";
+import {getGroup, getGroupPosts, askToJoinGroup, cancelToJoinGroup} from "../../actions/groupActions";
 import PostForm from "../posts/PostForm";
 
 class Group extends Component {
     componentDidMount() {
         if (this.props.match.params.id) {
-            this.props.geGroup(this.props.match.params.id)
+            this.props.getGroup(this.props.match.params.id)
             this.props.getGroupPosts(this.props.match.params.id)
         }
     }
@@ -91,7 +91,7 @@ Group.propTypes = {
     post: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     getGroupPosts: PropTypes.func.isRequired,
-    geGroup: PropTypes.func.isRequired,
+    getGroup: PropTypes.func.isRequired,
     askToJoinGroup: PropTypes.func.isRequired,
     cancelToJoinGroup: PropTypes.func.isRequired,
 };
@@ -104,5 +104,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {geGroup, getGroupPosts, askToJoinGroup, cancelToJoinGroup}
+    {getGroup, getGroupPosts, askToJoinGroup, cancelToJoinGroup}
 )(Group);

@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {geGroupManagers,} from "../../actions/groupActions";
+import {getGroupManagers,deleteAdmin} from "../../actions/groupActions";
 
 
 class GroupManagers extends Component {
     componentDidMount() {
-        this.props.geGroupManagers(this.props.match.params.id)
+        this.props.getGroupManagers(this.props.match.params.id)
     }
 
     render() {
@@ -17,14 +17,14 @@ class GroupManagers extends Component {
         const {auth} = this.props;
         let groupAbout;
         let groupMembers;
+        let man = true;
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
             groupAbout = <GroupAbout group={group}/>
             if (group.managers.length > 0) {
-                let adminIds = group.managers.map(manager => manager.user);
-                let isUserIsAdmin = adminIds.indexOf(auth.user.id);
                 if (group.user._id === auth.user.id) {
+                    console.log(99);
                     groupMembers = (
                         <div className="row mb-1">
                             {
@@ -48,12 +48,13 @@ class GroupManagers extends Component {
                                                         Profile
                                                     </Link>
                                                 </div>
-                                                {(group.user._id === manager.user._id && auth.user._id === manager.user._id )? (
+                                                {(group.user._id != manager.user._id )? (
                                                     <div className="mt-1">
-                                                        <Link to={`/profile/${manager.user.handle}`}
-                                                              className="col-8 btn btn-lg btn-danger mr-1">
+                                                        <button
+                                                            onClick={this.props.deleteAdmin.bind(this, group._id, manager.user._id,man)}
+                                                            className="col-8 btn btn-lg btn-danger mr-1">
                                                             Delete Admin
-                                                        </Link>
+                                                        </button>
                                                     </div>
                                                 ) : null}
                                             </div>
@@ -114,7 +115,8 @@ class GroupManagers extends Component {
 GroupManagers.propTypes = {
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    geGroupManagers: PropTypes.func.isRequired,
+    getGroupManagers: PropTypes.func.isRequired,
+    deleteAdmin: PropTypes.func.isRequired,
 };
 
 
@@ -125,5 +127,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {geGroupManagers}
+    {getGroupManagers,deleteAdmin}
 )(GroupManagers);

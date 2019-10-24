@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {deleteGroup, geGroup,askToJoinGroup,cancelToJoinGroup} from "../../actions/groupActions";
+import {deleteGroup, getGroup,askToJoinGroup,cancelToJoinGroup} from "../../actions/groupActions";
 import isEmpty from "../../validation/is-empty";
 
 class GroupsItem extends Component {
@@ -61,7 +61,7 @@ class GroupsItem extends Component {
                 <div className="row">
                     <div className="col-lg-6 col-md-4 col-8">
                         <h3>
-                            Name: <Link to={`/groups/${group._id}`} onClick={this.props.geGroup.bind(this, group._id)}>
+                            Name: <Link to={`/groups/${group._id}`} onClick={this.props.getGroup.bind(this, group._id)}>
                             {group.name}
                         </Link>
                         </h3>
@@ -104,7 +104,7 @@ const mapStateToProps = state => ({
 })
 GroupsItem.propTypes = {
     deleteGroup: PropTypes.func.isRequired,
-    geGroup: PropTypes.func.isRequired,
+    getGroup: PropTypes.func.isRequired,
     askToJoinGroup: PropTypes.func.isRequired,
     cancelToJoinGroup: PropTypes.func.isRequired,
     group: PropTypes.object.isRequired,
@@ -113,5 +113,5 @@ GroupsItem.propTypes = {
 
 export default connect(
     mapStateToProps,
-    {deleteGroup, geGroup,askToJoinGroup,cancelToJoinGroup}
+    {deleteGroup, getGroup,askToJoinGroup,cancelToJoinGroup}
 )(GroupsItem);

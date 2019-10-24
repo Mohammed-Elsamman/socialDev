@@ -4,12 +4,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {geGroupRequests,} from "../../actions/groupActions";
+import {getGroupRequests, acceptJoin, refuseJoin} from "../../actions/groupActions";
 
 
 class GroupRequests extends Component {
     componentDidMount() {
-        this.props.geGroupRequests(this.props.match.params.id)
+        this.props.getGroupRequests(this.props.match.params.id)
     }
 
     render() {
@@ -47,30 +47,24 @@ class GroupRequests extends Component {
                                                 </Link>
                                             </div>
                                             <div className="mt-3">
-                                                <Link to={`/profile/${request.user.handle}`}
-                                                      className="col-8 btn btn-lg btn-success mr-1">
+                                                <button
+                                                    onClick={this.props.acceptJoin.bind(this, group._id, request.user._id)}
+                                                    className="col-8 btn btn-lg btn-success mr-1">
                                                     Accept
-                                                </Link>
+                                                </button>
                                             </div>
                                             <div className="mt-3">
-                                                <Link to={`/profile/${request.user.handle}`}
-                                                      className="col-8 btn btn-lg btn-danger mr-1">
+                                                <button
+                                                    onClick={this.props.refuseJoin.bind(this, group._id, request.user._id)}
+                                                    className="col-8 btn btn-lg btn-danger mr-1">
                                                     Refuse
-                                                </Link>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 )
                             )
                         }
-                    </div>
-                )
-
-
-            } else {
-                groupMembers = (
-                    <div>
-                        No Members
                     </div>
                 )
             }
@@ -88,7 +82,9 @@ class GroupRequests extends Component {
 GroupRequests.propTypes = {
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    geGroupRequests: PropTypes.func.isRequired,
+    getGroupRequests: PropTypes.func.isRequired,
+    acceptJoin: PropTypes.func.isRequired,
+    refuseJoin: PropTypes.func.isRequired,
 };
 
 
@@ -99,5 +95,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {geGroupRequests}
+    {getGroupRequests, acceptJoin, refuseJoin}
 )(GroupRequests);

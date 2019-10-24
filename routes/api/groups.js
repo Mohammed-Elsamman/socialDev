@@ -210,4 +210,35 @@ router.post('/delmanager/:id/:uid',
     }
 )
 
+// @route   GET /api/groups/join/:id/:uid
+// @desc    accept join request
+// @access  private
+router.post('/join/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.requests = group.requests.filter(request =>request.user != req.params.uid)
+                group.members =  [...group.members, {user: req.params.uid}]
+                return group.save(group => res.json(group))
+            })
+            .catch(err => err)
+    }
+)
+
+// @route   GET /api/groups/notjoin/:id/:uid
+// @desc    accept join request
+// @access  private
+router.post('/notjoin/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.requests = group.requests.filter(request =>request.user != req.params.uid)
+                return group.save(group => res.json(group))
+            })
+            .catch(err => err)
+    }
+)
+
 module.exports = router;

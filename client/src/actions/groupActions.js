@@ -46,7 +46,7 @@ export const getMyGroups = uid => dispatch => {
 };
 
 //get group by id
-export const geGroup = id => dispatch => {
+export const getGroup = id => dispatch => {
     axios.get(`/api/groups/group/${id}`)
         .then(res => dispatch({
                 type: GET_GROUP,
@@ -96,7 +96,7 @@ export const askToJoinGroup = (id, uid, getgroup) => dispatch => {
         .then(res => {
             if (getgroup) {
                 console.log(getgroup);
-                return dispatch(geGroup(id))
+                return dispatch(getGroup(id))
             } else {
                 return dispatch(getGroups())
 
@@ -111,7 +111,7 @@ export const cancelToJoinGroup = (id, uid, getgroup) => dispatch => {
         .then(res => {
             if (getgroup) {
                 console.log(getgroup);
-                return dispatch(geGroup(id))
+                return dispatch(getGroup(id))
             } else {
                 return dispatch(getGroups())
 
@@ -122,7 +122,7 @@ export const cancelToJoinGroup = (id, uid, getgroup) => dispatch => {
 
 
 //get group members
-export const geGroupMembers = id => dispatch => {
+export const getGroupMembers = id => dispatch => {
     axios.get(`/api/groups/${id}/members`)
         .then(res => dispatch({
                 type: GET_GROUP,
@@ -137,7 +137,7 @@ export const geGroupMembers = id => dispatch => {
 };
 
 //get group members
-export const geGroupManagers = id => dispatch => {
+export const getGroupManagers = id => dispatch => {
     axios.get(`/api/groups/${id}/managers`)
         .then(res => dispatch({
                 type: GET_GROUP,
@@ -152,7 +152,7 @@ export const geGroupManagers = id => dispatch => {
 };
 
 //get group requests
-export const geGroupRequests = id => dispatch => {
+export const getGroupRequests = id => dispatch => {
     axios.get(`/api/groups/${id}/requests`)
         .then(res => dispatch({
                 type: GET_GROUP,
@@ -171,19 +171,49 @@ export const createAdmin = (id, uid) => dispatch => {
     console.log(id);
     console.log(uid);
     axios.post(`/api/groups/addmanager/${id}/${uid}/`)
-        .then(res => dispatch(geGroupMembers(id))
+        .then(res => dispatch(getGroupMembers(id))
         ).catch(err =>
-        dispatch(geGroupManagers(id))
+        dispatch(getGroupManagers(id))
     )
 };
 
 //delete group admin
-export const deleteAdmin = (id, uid) => dispatch => {
+export const deleteAdmin = (id, uid,man) => dispatch => {
     console.log(id);
     console.log(uid);
+    console.log(man);
     axios.post(`/api/groups/delmanager/${id}/${uid}/`)
-        .then(res => dispatch(geGroupMembers(id))
+        .then(res => {
+            if(man){
+                dispatch(getGroupManagers(id))
+            }else {
+                dispatch(getGroupMembers(id))
+            }
+        }
         ).catch(err =>
-        dispatch(geGroupManagers(id))
+        dispatch(getGroupManagers(id))
+    )
+};
+
+
+//accept join request
+export const acceptJoin = (id, uid) => dispatch => {
+    console.log(id);
+    console.log(uid);
+    axios.post(`/api/groups/join/${id}/${uid}/`)
+        .then(res => dispatch(getGroupRequests(id))
+        ).catch(err =>
+        dispatch(getGroupRequests(id))
+    )
+};
+
+//refuse join request
+export const refuseJoin = (id, uid) => dispatch => {
+    console.log(id);
+    console.log(uid);
+    axios.post(`/api/groups/notjoin/${id}/${uid}/`)
+        .then(res => dispatch(getGroupRequests(id))
+        ).catch(err =>
+        dispatch(getGroupRequests(id))
     )
 };
