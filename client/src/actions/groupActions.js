@@ -135,9 +135,25 @@ export const geGroupMembers = id => dispatch => {
         })
     )
 };
+
 //get group members
 export const geGroupManagers = id => dispatch => {
     axios.get(`/api/groups/${id}/managers`)
+        .then(res => dispatch({
+                type: GET_GROUP,
+                payload: res.data
+            })
+        ).catch(err =>
+        dispatch({
+            type: GET_GROUP,
+            payload: null
+        })
+    )
+};
+
+//get group requests
+export const geGroupRequests = id => dispatch => {
+    axios.get(`/api/groups/${id}/requests`)
         .then(res => dispatch({
                 type: GET_GROUP,
                 payload: res.data

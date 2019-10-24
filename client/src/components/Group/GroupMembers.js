@@ -11,7 +11,6 @@ class GroupMembers extends Component {
     componentDidMount() {
         this.props.geGroupMembers(this.props.match.params.id)
     }
-
     render() {
         const {group, loading} = this.props.group
         const {auth} = this.props
@@ -21,198 +20,220 @@ class GroupMembers extends Component {
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
-            // console.log(group.user._id);
             groupAbout = <GroupAbout group={group}/>
-            console.log(group.user);
-            console.log(group.members);
             if (group.members.length > 0) {
                 let adminIds = group.managers.map(manager => manager.user);
                 let isUserIsAdmin = adminIds.indexOf(auth.user.id);
                 if (isUserIsAdmin < 0) {
-                    console.log(isUserIsAdmin, "< 0  ===");
-                    console.log(1);
-                    groupMembers = group.members.map(member => (
-                            <div className="row mb-1">
-                                <div className="col-md-2">
-                                    <Link to="">
-                                        <img
-                                            className="rounded-circle d-none d-md-block"
-                                            src={member.user.avatar}
-                                            alt=""
-                                        />
-                                    </Link>
-                                </div>
-                                <p className="lead">
-                                    {member.user.name}
-                                </p>
-
-                                <div className="col-md-4">
-                                    <Link to={`/profile/${member.user.handle}`}
-                                          className="col-8 btn btn-lg btn-info mr-1">
-                                        Profile
-                                    </Link>
-                                </div>
-                            </div>
-                        )
+                    groupMembers = (
+                        <div className="row">
+                            {
+                                group.members.map(member => (
+                                        <div key={member._id} className="row col-md-6">
+                                            <div className="col-md-5 mt-2">
+                                                <Link to="">
+                                                    <img
+                                                        className="rounded-circle d-none d-md-block"
+                                                        src={member.user.avatar}
+                                                        alt=""
+                                                    />
+                                                </Link>
+                                                <div className="mt-4"/>
+                                                <h3 className="text-center">{member.user.name}</h3>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="mt-1">
+                                                    <Link to={`/profile/${member.user.handle}`}
+                                                          className="col-8 btn btn-lg btn-info mr-1">
+                                                        Profile
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
                     )
                 }
                 if (isUserIsAdmin >= 0) {
                     if (group.user._id === auth.user.id) {
-                        groupMembers = group.members.map(member => {
-                            let isMemberAdmin = adminIds.indexOf(member.user._id)
-                            if ((group.user._id === member.user._id)) {
-                                return membersContent = (
-                                    <div className="row mb-1">
-                                        <div className="col-md-2">
-                                            <Link to="">
-                                                <img
-                                                    className="rounded-circle d-none d-md-block"
-                                                    src={member.user.avatar}
-                                                    alt=""
-                                                />
-                                            </Link>
+                        groupMembers = (
+                            <div className="row">
+                                {
+                                    group.members.map(member => {
+                                        let isMemberAdmin = adminIds.indexOf(member.user._id)
+                                        if ((group.user._id === member.user._id)) {
+                                            return membersContent = (
+                                                <div key={member._id} className="row col-md-6">
+                                                    <div className="col-md-5 mt-2">
+                                                        <Link to="">
+                                                            <img
+                                                                className="rounded-circle d-none d-md-block"
+                                                                src={member.user.avatar}
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                        <div className="mt-4"/>
+                                                        <h3 className="text-center">{member.user.name}</h3>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                                Profile
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        } else if (isMemberAdmin < 0) {
+                                            return membersContent = (
+                                                <div key={member._id} className="row col-md-6">
+                                                    <div className="col-md-5 mt-2">
+                                                        <Link to="">
+                                                            <img
+                                                                className="rounded-circle d-none d-md-block"
+                                                                src={member.user.avatar}
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                        <div className="mt-4"/>
+                                                        <h3 className="text-center">{member.user.name}</h3>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                                Profile
+                                                            </Link>
+                                                        </div>
 
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-info mr-1">
-                                                Profile
-                                            </Link>
-                                        </div>
-                                    </div>
-                                )
-                            } else if (isMemberAdmin < 0) {
-                                return membersContent = (
-                                    <div className="row mb-1">
-                                        <div className="col-md-2">
-                                            <Link to="">
-                                                <img
-                                                    className="rounded-circle d-none d-md-block"
-                                                    src={member.user.avatar}
-                                                    alt=""
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-info mr-1">
-                                                Profile
-                                            </Link>
-                                        </div>
-
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-info mr-1">
-                                                Make Admin
-                                            </Link>
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-danger mr-1">
-                                                Delete
-                                            </Link>
-                                        </div>
-                                    </div>
-                                )
-                            } else {
-                                return membersContent = (
-                                    <div className="row mb-1">
-                                        <div className="col-md-2">
-                                            <Link to="">
-                                                <img
-                                                    className="rounded-circle d-none d-md-block"
-                                                    src={member.user.avatar}
-                                                    alt=""
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-info mr-1">
-                                                Profile
-                                            </Link>
-                                        </div>
-
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-danger mr-1">
-                                                Delete Admin
-                                            </Link>
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-danger mr-1">
-                                                Delete
-                                            </Link>
-                                        </div>
-                                    </div>
-                                )
-                            }
-
-
-                        })
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                                Make Admin
+                                                            </Link>
+                                                        </div>
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                                Delete
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        } else {
+                                            return membersContent = (
+                                                <div key={member._id} className="row col-md-6">
+                                                    <div className="col-md-5 mt-2">
+                                                        <Link to="">
+                                                            <img
+                                                                className="rounded-circle d-none d-md-block"
+                                                                src={member.user.avatar}
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                        <div className="mt-4"/>
+                                                        <h3 className="text-center">{member.user.name}</h3>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                                Profile
+                                                            </Link>
+                                                        </div>
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                                Delete Admin
+                                                            </Link>
+                                                        </div>
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                                Delete
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
+                        )
                     } else {
-                        group.members.map(member => {
-                            let isMemberAdmin = adminIds.indexOf(member.user._id)
-                            if (isMemberAdmin < 0) {
-                                return membersContent = (
-                                    <div className="row mb-1">
-                                        <div className="col-md-2">
-                                            <Link to="">
-                                                <img
-                                                    className="rounded-circle d-none d-md-block"
-                                                    src={member.user.avatar}
-                                                    alt=""
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-info mr-1">
-                                                Profile
-                                            </Link>
-                                        </div>
+                        groupMembers = (
+                            <div className="row mb-1">
+                                {
+                                    group.members.map(member => {
+                                        let isMemberAdmin = adminIds.indexOf(member.user._id)
+                                        if (isMemberAdmin < 0) {
+                                            return membersContent = (
+                                                <div key={member._id} className="row col-md-6">
+                                                    <div className="col-md-5 mt-2">
+                                                        <Link to="">
+                                                            <img
+                                                                className="rounded-circle d-none d-md-block"
+                                                                src={member.user.avatar}
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                        <div className="mt-4"/>
+                                                        <h3 className="text-center">{member.user.name}</h3>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                                Profile
+                                                            </Link>
+                                                        </div>
 
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-danger mr-1">
-                                                Delete
-                                            </Link>
-                                        </div>
-                                    </div>
-                                )
-                            } else {
-                                return membersContent = (
-                                    <div className="row mb-1">
-                                        <div className="col-md-2">
-                                            <Link to="">
-                                                <img
-                                                    className="rounded-circle d-none d-md-block"
-                                                    src={member.user.avatar}
-                                                    alt=""
-                                                />
-                                            </Link>
-                                        </div>
-                                        <div className="col-md-3">
-                                            <Link to={`/profile/${member.user.handle}`}
-                                                  className="col-8 btn btn-lg btn-info mr-1">
-                                                Profile
-                                            </Link>
-                                        </div>
-                                    </div>
-                                )
-                            }
-
-                        })
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                                Delete
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        } else {
+                                            return membersContent = (
+                                                <div className="row col-md-6">
+                                                    <div className="col-md-5 mt-2">
+                                                        <Link to="">
+                                                            <img
+                                                                className="rounded-circle d-none d-md-block"
+                                                                src={member.user.avatar}
+                                                                alt=""
+                                                            />
+                                                        </Link>
+                                                        <div className="mt-4"/>
+                                                        <h3 className="text-center">{member.user.name}</h3>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <div className="mt-1">
+                                                            <Link to={`/profile/${member.user.handle}`}
+                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                                Profile
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
+                        )
                     }
 
                 }
-            } else {
-                groupMembers = (
-                    <div>
-                        No Members
-                    </div>
-                )
             }
         }
         return (

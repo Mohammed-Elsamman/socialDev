@@ -14,7 +14,7 @@ class GroupManagers extends Component {
 
     render() {
         const {group, loading} = this.props.group
-        const {auth} = this.props
+        const {auth} = this.props;
         let groupAbout;
         let groupMembers;
         if (group === null || loading) {
@@ -25,71 +25,80 @@ class GroupManagers extends Component {
                 let adminIds = group.managers.map(manager => manager.user);
                 let isUserIsAdmin = adminIds.indexOf(auth.user.id);
                 if (group.user._id === auth.user.id) {
-                    console.log(5);
-                    groupMembers = group.managers.map(manager => (
-                            <div className="row mb-1">
-                                <div className="col-md-2">
-                                    <Link to="">
-                                        <img
-                                            className="rounded-circle d-none d-md-block"
-                                            src={manager.user.avatar}
-                                            alt=""
-                                        />
-                                    </Link>
-                                </div>
-                                <div className="col-md-2">
-                                    <h3>{manager.user.name}</h3>name
-                                </div>
-                                <div className="col-md-4">
-                                    <Link to={`/profile/${manager.user.handle}`}
-                                          className="col-8 btn btn-lg btn-info mr-1">
-                                        Profile
-                                    </Link>
-                                </div>
-                                {group.user._id === manager.user._id ? (
-                                    <div className="col-md-4">
-                                        <Link to={`/profile/${manager.user.handle}`}
-                                              className="col-8 btn btn-lg btn-danger mr-1">
-                                            Delete Admin
-                                        </Link>
-                                    </div>
-                                ) : null}
-
-                            </div>
-                        )
+                    groupMembers = (
+                        <div className="row mb-1">
+                            {
+                                group.managers.map(manager => (
+                                        <div key={manager._id} className="row col-md-6">
+                                            <div className="col-md-5 mt-2">
+                                                <Link to="">
+                                                    <img
+                                                        className="rounded-circle d-none d-md-block"
+                                                        src={manager.user.avatar}
+                                                        alt=""
+                                                    />
+                                                </Link>
+                                                <div className="mt-4"/>
+                                                <h3 className="text-center">{manager.user.name}</h3>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="mt-1">
+                                                    <Link to={`/profile/${manager.user.handle}`}
+                                                          className="col-8 btn btn-lg btn-info mr-1">
+                                                        Profile
+                                                    </Link>
+                                                </div>
+                                                {(group.user._id === manager.user._id && auth.user._id === manager.user._id )? (
+                                                    <div className="mt-1">
+                                                        <Link to={`/profile/${manager.user.handle}`}
+                                                              className="col-8 btn btn-lg btn-danger mr-1">
+                                                            Delete Admin
+                                                        </Link>
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
                     )
+
                 } else {
                     console.log(88);
-                    groupMembers = group.managers.map(manager => (
-                            <div className="row mb-1">
-                                <div className="col-md-2">
-                                    <Link to="">
-                                        <img
-                                            className="rounded-circle d-none d-md-block"
-                                            src={manager.user.avatar}
-                                            alt=""
-                                        />
-                                    </Link>
-                                </div>
-                                <div className="col-md-2">
-                                    <h3>{manager.user.name}</h3>name
-                                </div>
-                                <div className="col-md-3">
-                                    <Link to={`/profile/${manager.user.handle}`}
-                                          className="col-8 btn btn-lg btn-info mr-1">
-                                        Profile
-                                    </Link>
-                                </div>
-                            </div>
-                        )
+                    groupMembers = (
+                        <div className="row">
+                            {
+                                group.managers.map(manager => (
+                                        <div key={manager._id} className="row col-md-6">
+                                            <div className="col-md-5 mt-2">
+                                                <Link to="">
+                                                    <img
+                                                        className="rounded-circle d-none d-md-block"
+                                                        src={manager.user.avatar}
+                                                        alt=""
+                                                    />
+                                                </Link>
+                                                <div className="mt-4"/>
+                                                <h3 className="text-center">{manager.user.name}</h3>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="mt-1">
+                                                    <Link to={`/profile/${manager.user.handle}`}
+                                                          className="col-8 btn btn-lg btn-info mr-1">
+                                                        Profile
+                                                    </Link>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
                     )
+
                 }
-            } else {
-                groupMembers = (
-                    <div>
-                        No Members
-                    </div>
-                )
             }
         }
         return (

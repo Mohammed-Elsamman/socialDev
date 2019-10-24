@@ -101,10 +101,27 @@ router.get('/:id/managers',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
         Group.find({_id:req.params.id})
-            .populate('members.managers', ['name', 'avatar','handle'])
+            .populate('managers.user', ['name', 'avatar','handle'])
             .populate('user', ['name', 'avatar'])
             .then(group => {
                 console.log(group[0].members);
+                return res.json(group[0])
+            })
+            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+    });
+
+
+// @route   GET /api/groups/:id/requests
+// @desc    get group by id
+// @access  private
+router.get('/:id/requests',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.find({_id:req.params.id})
+            .populate('requests.user', ['name', 'avatar','handle'])
+            .populate('user', ['name', 'avatar'])
+            .then(group => {
+                console.log(group[0].requests);
                 return res.json(group[0])
             })
             .catch(err => res.status(404).json({profile: 'There are no profiles'}));

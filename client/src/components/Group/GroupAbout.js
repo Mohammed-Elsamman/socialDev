@@ -6,11 +6,13 @@ class GroupAbout extends Component {
 
     render() {
         const {group} = this.props;
-        let groupOwner = group.user
-        if(group.user._id){
-            groupOwner = group.user._id
+        let isUserIsAdmin;
+        if(group.managers[0].user._id){
+            isUserIsAdmin = group.managers.map(manager => manager.user._id).indexOf(group.user._id)
+
+        }else {
+            isUserIsAdmin = group.managers.map(manager => manager.user).indexOf(group.user._id)
         }
-        let isUserIsAdmin = group.managers.map(manager => manager.user).indexOf(groupOwner)
         let interestedin = group.interestedin.slice(0, 4).map((skill, index) => (
             <div key={index} className="p-3">
                 <i className="fa fa-check"/>
@@ -52,10 +54,11 @@ class GroupAbout extends Component {
                     </div>
                     {isUserIsAdmin >= 0 ? (
                     <div className="mb-2">
-                        <button className="btn btn-md btn-success"
+                        <Link to={`/groups/${group._id}/requests`}
+                              className="btn btn-md btn-success"
                         >
                             Requests: {group.requests.length}
-                        </button>
+                        </Link>
                     </div>
                     ) : null}
                 </div>
