@@ -10,9 +10,9 @@ import PostForm from "../posts/PostForm";
 
 class Group extends Component {
     componentDidMount() {
-        if (this.props.match.params.name) {
-            this.props.geGroup(this.props.match.params.name)
-            this.props.getGroupPosts(this.props.match.params.name)
+        if (this.props.match.params.id) {
+            this.props.geGroup(this.props.match.params.id)
+            this.props.getGroupPosts(this.props.match.params.id)
         }
     }
 
@@ -59,7 +59,7 @@ class Group extends Component {
                 isUserIsMember >= 0 ? (
                     groupPosts = (
                         <div>
-                            <PostForm idPG={this.props.match.params.name}/>
+                            <PostForm idPG={this.props.match.params.id}/>
                             <PostFeed posts={posts}/>
                         </div>
                     )

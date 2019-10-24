@@ -62,9 +62,7 @@ class Education extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {};
-}
+const mapStateToProps = state => ({})
 
 Education.propTypes = {
     deleteEducation: PropTypes.func.isRequired

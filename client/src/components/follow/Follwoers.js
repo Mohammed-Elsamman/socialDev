@@ -54,7 +54,6 @@ class Follwers extends Component {
                             </div>
 
                         </div>
-
                     )
                 })
             } else {

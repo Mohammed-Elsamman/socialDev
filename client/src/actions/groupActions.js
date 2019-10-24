@@ -31,8 +31,8 @@ export const createGroup = (groupDate, history) => dispatch => {
         )
 };
 //get my groups
-export const getMyGroups = id => dispatch => {
-    axios.get(`/api/groups/${id}`)
+export const getMyGroups = uid => dispatch => {
+    axios.get(`/api/groups/${uid}`)
         .then(res => dispatch({
                 type: GET_GROUPS,
                 payload: res.data
@@ -120,3 +120,18 @@ export const cancelToJoinGroup = (id, uid, getgroup) => dispatch => {
         .catch(err => dispatch(getGroups()))
 };
 
+
+//get group members
+export const geGroupMembers = id => dispatch => {
+    axios.get(`/api/groups/${id}/members`)
+        .then(res => dispatch({
+                type: GET_GROUP,
+                payload: res.data
+            })
+        ).catch(err =>
+        dispatch({
+            type: GET_GROUP,
+            payload: null
+        })
+    )
+};

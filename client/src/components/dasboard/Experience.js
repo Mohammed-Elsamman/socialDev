@@ -62,9 +62,7 @@ class Experience extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {};
-}
+const mapStateToProps = state => ({})
 
 Experience.propTypes = {
     deleteExperience: PropTypes.func.isRequired

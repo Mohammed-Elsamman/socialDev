@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
 import isEmpty from "../../validation/is-empty";
+import {Link} from "react-router-dom";
 
 class GroupAbout extends Component {
 
     render() {
-        const {group, auth} = this.props;
-        let isUserIsAdmin = group.managers.map(manager => manager.user).indexOf(auth.user.id)
-        const interestedin = group.interestedin.slice(0, 4).map((skill, index) => (
+        const {group} = this.props;
+        let groupOwner = group.user
+        if(group.user._id){
+            groupOwner = group.user._id
+        }
+        let isUserIsAdmin = group.managers.map(manager => manager.user).indexOf(groupOwner)
+        let interestedin = group.interestedin.slice(0, 4).map((skill, index) => (
             <div key={index} className="p-3">
                 <i className="fa fa-check"/>
                 {skill}
@@ -31,16 +36,26 @@ class GroupAbout extends Component {
                     </div>
                 </div>
                 <div className="col-md-4">
-                    <p>
-                        Members: {group.members.length}
-                    </p>
-                    <p>
-                        Managers: {group.managers.length}
-                    </p>
+                    <div className="mb-2 mt-2">
+                        <Link to={`/groups/${group._id}/members`}
+                              className="btn btn-md btn-success"
+                        >
+                            Members: {group.members.length}
+                        </Link>
+                    </div>
+                    <div className="mb-2">
+                        <button className="btn btn-md btn-success"
+                        >
+                            Managers: {group.managers.length}
+                        </button>
+                    </div>
                     {isUserIsAdmin >= 0 ? (
-                        <p>
+                    <div className="mb-2">
+                        <button className="btn btn-md btn-success"
+                        >
                             Requests: {group.requests.length}
-                        </p>
+                        </button>
+                    </div>
                     ) : null}
                 </div>
 
