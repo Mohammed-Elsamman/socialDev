@@ -32,7 +32,7 @@ require("./config/passport")(passport);
 
 app.use("/api/user", users);
 app.use("/api/profile", profile);
-app.use("/api/post", post);
+app.use("/api/posts", post);
 app.use("/api/groups", group);
 
 const port = process.env.PORT || 5000;

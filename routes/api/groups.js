@@ -116,6 +116,7 @@ router.post('/askjoin/:id/:uid',
     (req, res) => {
         Group.findById(req.params.id)
             .then(group => {
+                console.log(group);
                 group.requests.push({user: req.params.uid})
                 return group.save(group => res.json(group))
             }).catch(err => err)

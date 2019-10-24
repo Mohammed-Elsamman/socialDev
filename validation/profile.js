@@ -22,7 +22,6 @@ module.exports = validateProfileInput = data => {
         }
     }
     if (!isEmpty(data.facebook)) {
-        console.log(data.facebook)
         if (!validator.isURL(data.facebook)) {
             errors.facebook = "not a valied URL"
         }
@@ -43,7 +42,6 @@ module.exports = validateProfileInput = data => {
         }
     }
     if (!isEmpty(data.linkedin)) {
-        console.log(data.linkedin)
         if (!validator.isURL(data.linkedin)) {
             errors.linkedin = "not a valied URL"
         }

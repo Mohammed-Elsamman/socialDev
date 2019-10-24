@@ -14,16 +14,13 @@ class Follwers extends Component {
     }
 
     render() {
-        const {followers,loading}=this.props.follow
-        console.log(this.props);
-        console.log(followers);
+        const {followers,loading}=this.props.follow;
         let followersItem
         if (followers === null || loading) {
             followersItem = <Spinner/>
         } else {
             if (followers.length > 0) {
                 followersItem = followers.map(follower => {
-                    console.log(follower);
                     return (
                         <div className="card card-body mb-3">
                             <div className="row">

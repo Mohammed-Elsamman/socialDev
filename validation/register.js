@@ -11,7 +11,6 @@ module.exports = validateRegisterInput = data => {
 
     //check on the length of the name and if is empty
     // if (!validator.isLength(data.name, {min: 3, max: 30})) {
-    //     console.log(data.name);
     //     errors.name = "name must be between 3 and 30 charachters"
     // }
     if (validator.isEmpty(data.name)) {

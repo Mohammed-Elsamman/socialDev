@@ -15,12 +15,10 @@ router.get('/test', (req, res) => res.json({msg: "posts is works"}));
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        console.log(req.body);
         const {errors, isValid} = validationPostInpot(req.body);
         if (!isValid) {
             return res.status(404).json({errors})
         }
-        console.log(req.body);
         const newPost = new Post({
             text: req.body.text,
             name: req.body.name,
@@ -28,7 +26,6 @@ router.post('/',
             user: req.user.id,
             group: req.body.group,
         });
-        console.log(newPost);
         newPost.save().then(post => res.json(post))
     }
 );
@@ -42,7 +39,6 @@ router.get('/',
         User.findById(req.user.id)
             .then(user => {
                     let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
-                    console.log(ids);
                     Post.aggregate([{$match: {user: {$in: ids}}}])
                         .then(post => {
                             if (!post) {
@@ -65,7 +61,6 @@ router.get('/my_post',
     (req, res) => {
         Post.find({user: req.user.id})
             .then(post => {
-                console.log(post);
                 if (!post) {
                     return res.status(404).json({nopst: "there is no post for that user"})
                 }

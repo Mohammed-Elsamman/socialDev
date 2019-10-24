@@ -34,7 +34,6 @@ class CreateGroup extends Component {
       interestedin: this.state.interestedin,
       description: this.state.description,
     };
-    console.log(groupData);
     this.props.createGroup(groupData, this.props.history);
   }
 

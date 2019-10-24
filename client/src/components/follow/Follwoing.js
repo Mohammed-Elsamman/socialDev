@@ -14,7 +14,6 @@ class Follwoing extends Component {
     render() {
         const {following,loading} = this.props.follow;
         const {auth} = this.props;
-        console.log(following);
         let followongItem;
         if (following === null || loading) {
             followongItem = <Spinner/>

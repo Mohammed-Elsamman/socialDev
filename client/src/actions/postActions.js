@@ -5,7 +5,7 @@ import {getGroupPosts} from "./groupActions";
 export const addPost = postData => dispatch => {
     dispatch(clearErrors());
     axios
-        .post('/api/post', postData)
+        .post('/api/posts', postData)
         .then(res =>
             dispatch({
                 type: ADD_POST,
@@ -24,7 +24,7 @@ export const addPost = postData => dispatch => {
 export const getPosts = () => dispatch => {
     dispatch(setPostLoading());
     axios
-        .get('/api/post')
+        .get('/api/posts')
         .then(res =>
             dispatch({
                 type: GET_POSTS,
@@ -43,7 +43,7 @@ export const getPosts = () => dispatch => {
 export const getUserPosts = () => dispatch => {
     dispatch(setPostLoading());
     axios
-        .get('/api/post/my_post')
+        .get('/api/posts/my_post')
         .then(res =>
             dispatch({
                 type: GET_POSTS,
@@ -62,7 +62,7 @@ export const getUserPosts = () => dispatch => {
 export const getPost = id => dispatch => {
     dispatch(setPostLoading());
     axios
-        .get(`/api/post/${id}`)
+        .get(`/api/posts/${id}`)
         .then(res =>
             dispatch({
                 type: GET_POST,
@@ -78,24 +78,26 @@ export const getPost = id => dispatch => {
 };
 //DELETE POST
 export const deletePost = (post_id) => dispatch => {
-    dispatch(setPostLoading())
-    axios.delete(`/api/post/${post_id}`,)
-        .then(res =>
-            dispatch({
-                type: DELETE_POST,
-                payload: res.data
-            }))
-        .catch(err =>
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data.errors
-            })
-        );
+    if (window.confirm("Are You Shure To Delete this post")) {
+        dispatch(setPostLoading())
+        axios.delete(`/api/posts/${post_id}`,)
+            .then(res =>
+                dispatch({
+                    type: DELETE_POST,
+                    payload: res.data
+                }))
+            .catch(err =>
+                dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data.errors
+                })
+            );
+    }
 };
 
 //LIKE POST
 export const addLike = (post_id, groupId) => dispatch => {
-    axios.post(`/api/post/like/${post_id}`)
+    axios.post(`/api/posts/like/${post_id}`)
         .then(res => {
             if (groupId) {
                 return dispatch(getGroupPosts(groupId))
@@ -113,7 +115,7 @@ export const addLike = (post_id, groupId) => dispatch => {
 
 //UNLIKE POST
 export const removeLike = (post_id, groupId) => dispatch => {
-    axios.delete(`/api/post/unlike/${post_id}`,)
+    axios.delete(`/api/posts/unlike/${post_id}`,)
         .then(res => {
             if (groupId) {
                 return dispatch(getGroupPosts(groupId))
@@ -133,7 +135,7 @@ export const removeLike = (post_id, groupId) => dispatch => {
 //Add Comment
 export const addComment = (post_id, commentData) => dispatch => {
     dispatch(clearErrors());
-    axios.post(`/api/post/comment/${post_id}`, commentData)
+    axios.post(`/api/posts/comment/${post_id}`, commentData)
         .then(res => dispatch({
             type: GET_POST,
             payload: res.data
@@ -148,7 +150,7 @@ export const addComment = (post_id, commentData) => dispatch => {
 
 //delete Comment
 export const deleteComment = (postId, commentId) => dispatch => {
-    axios.delete(`/api/post/comment/${postId}/${commentId}`)
+    axios.delete(`/api/posts/comment/${postId}/${commentId}`)
         .then(res => dispatch({
             type: GET_POST,
             payload: res.data

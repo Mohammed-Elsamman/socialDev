@@ -4,7 +4,8 @@ import isEmpty from "../../validation/is-empty";
 class GroupAbout extends Component {
 
     render() {
-        const {group} = this.props;
+        const {group, auth} = this.props;
+        let isUserIsAdmin = group.managers.map(manager => manager.user).indexOf(auth.user.id)
         const interestedin = group.interestedin.slice(0, 4).map((skill, index) => (
             <div key={index} className="p-3">
                 <i className="fa fa-check"/>
@@ -36,6 +37,11 @@ class GroupAbout extends Component {
                     <p>
                         Managers: {group.managers.length}
                     </p>
+                    {isUserIsAdmin >= 0 ? (
+                        <p>
+                            Requests: {group.requests.length}
+                        </p>
+                    ) : null}
                 </div>
 
             </div>

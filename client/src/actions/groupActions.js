@@ -4,6 +4,7 @@ import {setPostLoading} from "./postActions";
 
 //get all groups
 export const getGroups = () => dispatch => {
+    console.log(1111);
     axios.get("/api/groups/")
         .then(res =>
             dispatch({
@@ -20,7 +21,6 @@ export const getGroups = () => dispatch => {
 
 //create group
 export const createGroup = (groupDate, history) => dispatch => {
-    console.log(groupDate);
     axios.post("/api/groups", groupDate)
         .then(res => history.push("/groups"))
         .catch(err =>
@@ -47,7 +47,6 @@ export const getMyGroups = id => dispatch => {
 
 //get group by id
 export const geGroup = id => dispatch => {
-    console.log(id);
     axios.get(`/api/groups/group/${id}`)
         .then(res => dispatch({
                 type: GET_GROUP,
@@ -63,12 +62,13 @@ export const geGroup = id => dispatch => {
 
 //delete a group
 export const deleteGroup = id => dispatch => {
-    console.log(id);
-    axios.delete(`/api/groups/${id}`)
-        .then(res => dispatch(getGroups())
-        ).catch(err =>
-        dispatch(getGroups())
-    )
+    if (window.confirm("Are You Shure To Delete this group")) {
+        axios.delete(`/api/groups/${id}`)
+            .then(res => dispatch(getGroups())
+            ).catch(err =>
+            dispatch(getGroups())
+        )
+    }
 };
 
 
@@ -91,20 +91,32 @@ export const getGroupPosts = id => dispatch => {
 };
 
 //send request to join a group
-export const askToJoinGroup = (id,uid) => dispatch => {
-    console.log(id);
-    console.log(uid);
+export const askToJoinGroup = (id, uid, getgroup) => dispatch => {
     axios.post(`/api/groups/askjoin/${id}/${uid}`)
-        .then(res => dispatch(getGroups()))
+        .then(res => {
+            if (getgroup) {
+                console.log(getgroup);
+                return dispatch(geGroup(id))
+            } else {
+                return dispatch(getGroups())
+
+            }
+        })
         .catch(err => dispatch(getGroups()))
 };
 
 //cancel request to join a group
-export const cancelToJoinGroup = (id,uid) => dispatch => {
-    console.log(id);
-    console.log(uid);
+export const cancelToJoinGroup = (id, uid, getgroup) => dispatch => {
     axios.post(`/api/groups/cancel/${id}/${uid}`)
-        .then(res => dispatch(getGroups()))
+        .then(res => {
+            if (getgroup) {
+                console.log(getgroup);
+                return dispatch(geGroup(id))
+            } else {
+                return dispatch(getGroups())
+
+            }
+        })
         .catch(err => dispatch(getGroups()))
 };
 

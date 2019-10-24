@@ -5,15 +5,15 @@ import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
 import PostFeed from "../posts/PostFeed";
-import {geGroup, getGroupPosts} from "../../actions/groupActions";
+import {geGroup, getGroupPosts, askToJoinGroup, cancelToJoinGroup} from "../../actions/groupActions";
 import PostForm from "../posts/PostForm";
 
 class Group extends Component {
     componentDidMount() {
-        console.log(this.props);
-        if (this.props.match.params.name)
+        if (this.props.match.params.name) {
             this.props.geGroup(this.props.match.params.name)
-        this.props.getGroupPosts(this.props.match.params.name)
+            this.props.getGroupPosts(this.props.match.params.name)
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -23,58 +23,61 @@ class Group extends Component {
     }
 
     render() {
+        const {auth} = this.props;
         const {group, loading} = this.props.group;
         const {posts} = this.props.post;
-        const loadingPost = this.props.post.loading
-        const {auth} = this.props;
-        let ProfileContent;
-        let postContent;
-        let myPage;
-        if (posts.length === 0 || loadingPost) {
-            postContent = <Spinner/>
-        } else {
-            postContent = <PostFeed posts={posts}/>
-        }
+        let isUserIsMember;
+        let groupAbout;
+        let groupPosts;
+        let isUserRequest;
+        let joinButton;
+        let getgroup = true;
         if (group === null || loading) {
-            ProfileContent = <Spinner/>
+            groupAbout = <Spinner/>
         } else {
-            {
-                group.user._id === auth.user.id ? (
-                    myPage =
-                        <div className="row">
-                            <div className="col-md-4 mb-3 ">
-                                <div className="card">
-                                    <Link to="/follwoers" className="btn btn-info">
-                                        follwoers
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="col-md-4 mb-3 "></div>
-                            <div className="col-md-4 mb-3">
-                                <div className="card">
-                                    <Link to="/follwoing" className="btn btn-info">
-                                        follwoing
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                ) : null
+            groupAbout = <GroupAbout group={group} auth={auth}/>
+            isUserIsMember = group.members.map(member => member.user).indexOf(auth.user.id)
+            isUserRequest = group.requests.map(member => member.user).indexOf(auth.user.id);
+            if (isUserRequest >= 0) {
+                joinButton = (
+                    <button
+                        onClick={this.props.cancelToJoinGroup.bind(this, group._id, auth.user.id,getgroup)}
+                        className="btn btn-danger">
+                        cancel the request
+                    </button>
+                )
+            } else {
+                joinButton = (
+                    <button
+                        onClick={this.props.askToJoinGroup.bind(this, group._id, auth.user.id,getgroup)}
+                        className="btn btn-info">
+                        Join The Group
+                    </button>
+                )
             }
-            ProfileContent = (
-                <div>
-                    {myPage}
-                    <GroupAbout group={group}/>
-                </div>
-            )
+            {
+                isUserIsMember >= 0 ? (
+                    groupPosts = (
+                        <div>
+                            <PostForm idPG={this.props.match.params.name}/>
+                            <PostFeed posts={posts}/>
+                        </div>
+                    )
+                ) : groupPosts = (
+                    <div>
+                        <h3>Sorry: You are not a member in that group</h3>
+                        {joinButton}
+                    </div>
+                )
+            }
         }
         return (
             <div className="group">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
-                            {ProfileContent}
-                            <PostForm idPG={this.props.match.params.name}/>
-                            {postContent}
+                            {groupAbout}
+                            {groupPosts}
                         </div>
                     </div>
                 </div>
@@ -89,6 +92,8 @@ Group.propTypes = {
     auth: PropTypes.object.isRequired,
     getGroupPosts: PropTypes.func.isRequired,
     geGroup: PropTypes.func.isRequired,
+    askToJoinGroup: PropTypes.func.isRequired,
+    cancelToJoinGroup: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -99,5 +104,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {geGroup, getGroupPosts}
+    {geGroup, getGroupPosts, askToJoinGroup, cancelToJoinGroup}
 )(Group);

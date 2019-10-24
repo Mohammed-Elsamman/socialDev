@@ -64,8 +64,6 @@ export const unFollowingUser = (Id, followId) => dispatch => {
 
 //unfollowing user
 export const unFollowingUserPage = (Id, followId) => dispatch => {
-    console.log(Id);
-    console.log(followId);
     axios.post(`/api/user/unfollow/${Id}/${followId}`)
         .then(res =>
             dispatch(getFollwoing(Id))

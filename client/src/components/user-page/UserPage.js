@@ -18,8 +18,6 @@ class UserPage extends Component {
     render() {
         const {posts, loading} = this.props.post;
         const {profile} = this.props.profile;
-        console.log(posts);
-        console.log(profile);
         let myPageContent
         if (posts === null || profile === null || loading) {
             myPageContent = <Spinner/>
