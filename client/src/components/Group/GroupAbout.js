@@ -44,10 +44,11 @@ class GroupAbout extends Component {
                         </Link>
                     </div>
                     <div className="mb-2">
-                        <button className="btn btn-md btn-success"
+                        <Link to={`/groups/${group._id}/managers`}
+                              className="btn btn-md btn-success"
                         >
                             Managers: {group.managers.length}
-                        </button>
+                        </Link>
                     </div>
                     {isUserIsAdmin >= 0 ? (
                     <div className="mb-2">

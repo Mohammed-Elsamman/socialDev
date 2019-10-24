@@ -78,7 +78,7 @@ router.get('/group/:id',
     });
 
 
-// @route   GET /api/groups/:id
+// @route   GET /api/groups/:id/members
 // @desc    get group by id
 // @access  private
 router.get('/:id/members',
@@ -86,6 +86,22 @@ router.get('/:id/members',
     (req, res) => {
         Group.find({_id:req.params.id})
             .populate('members.user', ['name', 'avatar','handle'])
+            .populate('user', ['name', 'avatar'])
+            .then(group => {
+                console.log(group[0].members);
+                return res.json(group[0])
+            })
+            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+    });
+
+// @route   GET /api/groups/:id/managers
+// @desc    get group by id
+// @access  private
+router.get('/:id/managers',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.find({_id:req.params.id})
+            .populate('members.managers', ['name', 'avatar','handle'])
             .populate('user', ['name', 'avatar'])
             .then(group => {
                 console.log(group[0].members);
