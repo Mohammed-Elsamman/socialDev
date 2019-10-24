@@ -165,3 +165,25 @@ export const geGroupRequests = id => dispatch => {
         })
     )
 };
+
+//create group admin
+export const createAdmin = (id, uid) => dispatch => {
+    console.log(id);
+    console.log(uid);
+    axios.post(`/api/groups/addmanager/${id}/${uid}/`)
+        .then(res => dispatch(geGroupMembers(id))
+        ).catch(err =>
+        dispatch(geGroupManagers(id))
+    )
+};
+
+//delete group admin
+export const deleteAdmin = (id, uid) => dispatch => {
+    console.log(id);
+    console.log(uid);
+    axios.post(`/api/groups/delmanager/${id}/${uid}/`)
+        .then(res => dispatch(geGroupMembers(id))
+        ).catch(err =>
+        dispatch(geGroupManagers(id))
+    )
+};

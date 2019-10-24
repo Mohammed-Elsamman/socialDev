@@ -84,11 +84,10 @@ router.get('/group/:id',
 router.get('/:id/members',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        Group.find({_id:req.params.id})
-            .populate('members.user', ['name', 'avatar','handle'])
+        Group.find({_id: req.params.id})
+            .populate('members.user', ['name', 'avatar', 'handle'])
             .populate('user', ['name', 'avatar'])
             .then(group => {
-                console.log(group[0].members);
                 return res.json(group[0])
             })
             .catch(err => res.status(404).json({profile: 'There are no profiles'}));
@@ -100,11 +99,10 @@ router.get('/:id/members',
 router.get('/:id/managers',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        Group.find({_id:req.params.id})
-            .populate('managers.user', ['name', 'avatar','handle'])
+        Group.find({_id: req.params.id})
+            .populate('managers.user', ['name', 'avatar', 'handle'])
             .populate('user', ['name', 'avatar'])
             .then(group => {
-                console.log(group[0].members);
                 return res.json(group[0])
             })
             .catch(err => res.status(404).json({profile: 'There are no profiles'}));
@@ -117,13 +115,10 @@ router.get('/:id/managers',
 router.get('/:id/requests',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
-        Group.find({_id:req.params.id})
-            .populate('requests.user', ['name', 'avatar','handle'])
+        Group.find({_id: req.params.id})
+            .populate('requests.user', ['name', 'avatar', 'handle'])
             .populate('user', ['name', 'avatar'])
-            .then(group => {
-                console.log(group[0].requests);
-                return res.json(group[0])
-            })
+            .then(group => res.json(group[0]))
             .catch(err => res.status(404).json({profile: 'There are no profiles'}));
     });
 
@@ -164,7 +159,6 @@ router.post('/askjoin/:id/:uid',
     (req, res) => {
         Group.findById(req.params.id)
             .then(group => {
-                console.log(group);
                 group.requests.push({user: req.params.uid})
                 return group.save(group => res.json(group))
             }).catch(err => err)
@@ -183,6 +177,36 @@ router.post('/cancel/:id/:uid',
                 group.requests = group.requests.filter(request => request.user != req.params.uid)
                 return group.save(group => res.json(group))
             }).catch(err => err)
+    }
+)
+
+// @route   GET /api/groups/manager/:id/:uid
+// @desc    create admin
+// @access  private
+router.post('/addmanager/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.managers = [...group.managers, {user: req.params.uid}]
+                return group.save(group => res.json(group))
+            })
+            .catch(err => err)
+    }
+)
+
+// @route   GET /api/groups/manager/:id/:uid
+// @desc    create admin
+// @access  private
+router.post('/delmanager/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.managers = group.managers.filter(manager =>manager.user != req.params.uid)
+                return group.save(group => res.json(group))
+            })
+            .catch(err => err)
     }
 )
 

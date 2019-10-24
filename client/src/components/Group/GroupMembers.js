@@ -4,13 +4,14 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {geGroupMembers,} from "../../actions/groupActions";
+import {geGroupMembers, createAdmin, deleteAdmin} from "../../actions/groupActions";
 
 
 class GroupMembers extends Component {
     componentDidMount() {
         this.props.geGroupMembers(this.props.match.params.id)
     }
+
     render() {
         const {group, loading} = this.props.group
         const {auth} = this.props
@@ -25,6 +26,7 @@ class GroupMembers extends Component {
                 let adminIds = group.managers.map(manager => manager.user);
                 let isUserIsAdmin = adminIds.indexOf(auth.user.id);
                 if (isUserIsAdmin < 0) {
+                    console.log(1);
                     groupMembers = (
                         <div className="row">
                             {
@@ -57,13 +59,16 @@ class GroupMembers extends Component {
                     )
                 }
                 if (isUserIsAdmin >= 0) {
+                    console.log(2);
                     if (group.user._id === auth.user.id) {
+                        console.log(3);
                         groupMembers = (
                             <div className="row">
                                 {
                                     group.members.map(member => {
                                         let isMemberAdmin = adminIds.indexOf(member.user._id)
                                         if ((group.user._id === member.user._id)) {
+                                            console.log(4);
                                             return membersContent = (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
@@ -110,21 +115,23 @@ class GroupMembers extends Component {
                                                         </div>
 
                                                         <div className="mt-1">
-                                                            <Link to={`/profile/${member.user.handle}`}
-                                                                  className="col-8 btn btn-lg btn-info mr-1">
+                                                            <button
+                                                                onClick={this.props.createAdmin.bind(this, group._id, member.user._id)}
+                                                                className="col-8 btn btn-lg btn-info mr-1">
                                                                 Make Admin
-                                                            </Link>
+                                                            </button>
                                                         </div>
                                                         <div className="mt-1">
-                                                            <Link to={`/profile/${member.user.handle}`}
-                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                            <button
+                                                                className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete
-                                                            </Link>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             )
                                         } else {
+                                            console.log(6);
                                             return membersContent = (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
@@ -146,16 +153,17 @@ class GroupMembers extends Component {
                                                             </Link>
                                                         </div>
                                                         <div className="mt-1">
-                                                            <Link to={`/profile/${member.user.handle}`}
-                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                            <button
+                                                                onClick={this.props.deleteAdmin.bind(this, group._id, member.user._id)}
+                                                                className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete Admin
-                                                            </Link>
+                                                            </button>
                                                         </div>
                                                         <div className="mt-1">
-                                                            <Link to={`/profile/${member.user.handle}`}
-                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                            <button
+                                                                className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete
-                                                            </Link>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -194,10 +202,10 @@ class GroupMembers extends Component {
                                                         </div>
 
                                                         <div className="mt-1">
-                                                            <Link to={`/profile/${member.user.handle}`}
-                                                                  className="col-8 btn btn-lg btn-danger mr-1">
+                                                            <button
+                                                                className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete
-                                                            </Link>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -250,6 +258,8 @@ GroupMembers.propTypes = {
     group: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     geGroupMembers: PropTypes.func.isRequired,
+    createAdmin: PropTypes.func.isRequired,
+    deleteAdmin: PropTypes.func.isRequired,
 };
 
 
@@ -260,5 +270,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {geGroupMembers}
+    {geGroupMembers, createAdmin, deleteAdmin}
 )(GroupMembers);
