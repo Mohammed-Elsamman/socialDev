@@ -144,9 +144,8 @@ router.get('/post/:id',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
         Post.find({group: req.params.id})
-            .then(post => {
-                res.json(post)
-            }).catch(err => err)
+            .then(post => res.json(post)
+            ).catch(err => err)
     }
 )
 
@@ -203,7 +202,8 @@ router.post('/delmanager/:id/:uid',
     (req, res) => {
         Group.findById(req.params.id)
             .then(group => {
-                group.managers = group.managers.filter(manager =>manager.user != req.params.uid)
+                group.managers = group.managers.filter(manager => manager.user != req.params.uid)
+                // group.members = group.members.filter(member => member.user != req.params.uid)
                 return group.save(group => res.json(group))
             })
             .catch(err => err)
@@ -218,8 +218,8 @@ router.post('/join/:id/:uid',
     (req, res) => {
         Group.findById(req.params.id)
             .then(group => {
-                group.requests = group.requests.filter(request =>request.user != req.params.uid)
-                group.members =  [...group.members, {user: req.params.uid}]
+                group.requests = group.requests.filter(request => request.user != req.params.uid)
+                group.members = [...group.members, {user: req.params.uid}]
                 return group.save(group => res.json(group))
             })
             .catch(err => err)
@@ -227,17 +227,33 @@ router.post('/join/:id/:uid',
 )
 
 // @route   GET /api/groups/notjoin/:id/:uid
-// @desc    accept join request
+// @desc    reject join request
 // @access  private
 router.post('/notjoin/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
         Group.findById(req.params.id)
             .then(group => {
-                group.requests = group.requests.filter(request =>request.user != req.params.uid)
+                group.requests = group.requests.filter(request => request.user != req.params.uid)
                 return group.save(group => res.json(group))
             })
             .catch(err => err)
+    }
+)
+
+
+// @route   GET /api/groups/reject/:id/:uid
+// @desc    reject request to join a group
+// @access  private
+router.post('/removemember/:id/:uid',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        Group.findById(req.params.id)
+            .then(group => {
+                group.managers = group.managers.filter(manager => manager.user != req.params.uid)
+                group.members = group.members.filter(member => member.user != req.params.uid)
+                return group.save(group => res.json(group))
+            }).catch(err => err)
     }
 )
 

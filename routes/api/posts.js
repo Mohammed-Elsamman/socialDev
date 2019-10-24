@@ -41,9 +41,6 @@ router.get('/',
                     let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
                     Post.aggregate([{$match: {user: {$in: ids}}}])
                         .then(post => {
-                            if (!post) {
-                                res.status(404).json({noPosts: "there is no posts"})
-                            }
                             res.json(post)
                         })
                         .catch(err => res.status(404).json(err))
@@ -94,6 +91,7 @@ router.get('/:id',
 router.post('/like/:id',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
+        console.log(5);
         Post.findById(req.params.id)
             .then(post => {
                 if (!post) {

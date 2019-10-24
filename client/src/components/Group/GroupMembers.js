@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {getGroupMembers, createAdmin, deleteAdmin} from "../../actions/groupActions";
+import {getGroupMembers, createAdmin, deleteAdmin, removeMember} from "../../actions/groupActions";
 
 
 class GroupMembers extends Component {
@@ -21,12 +21,11 @@ class GroupMembers extends Component {
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
-            groupAbout = <GroupAbout group={group}/>
+            groupAbout = <GroupAbout group={group} auth={auth}/>
             if (group.members.length > 0) {
                 let adminIds = group.managers.map(manager => manager.user);
                 let isUserIsAdmin = adminIds.indexOf(auth.user.id);
                 if (isUserIsAdmin < 0) {
-                    console.log(1);
                     groupMembers = (
                         <div className="row">
                             {
@@ -59,16 +58,13 @@ class GroupMembers extends Component {
                     )
                 }
                 if (isUserIsAdmin >= 0) {
-                    console.log(2);
                     if (group.user._id === auth.user.id) {
-                        console.log(3);
                         groupMembers = (
                             <div className="row">
                                 {
                                     group.members.map(member => {
                                         let isMemberAdmin = adminIds.indexOf(member.user._id)
                                         if ((group.user._id === member.user._id)) {
-                                            console.log(4);
                                             return membersContent = (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
@@ -123,6 +119,7 @@ class GroupMembers extends Component {
                                                         </div>
                                                         <div className="mt-1">
                                                             <button
+                                                                onClick={this.props.removeMember.bind(this, group._id, member.user._id)}
                                                                 className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete
                                                             </button>
@@ -131,7 +128,6 @@ class GroupMembers extends Component {
                                                 </div>
                                             )
                                         } else {
-                                            console.log(6);
                                             return membersContent = (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
@@ -161,6 +157,7 @@ class GroupMembers extends Component {
                                                         </div>
                                                         <div className="mt-1">
                                                             <button
+                                                                onClick={this.props.removeMember.bind(this, group._id, member.user._id)}
                                                                 className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete
                                                             </button>
@@ -203,6 +200,7 @@ class GroupMembers extends Component {
 
                                                         <div className="mt-1">
                                                             <button
+                                                                onClick={this.props.removeMember.bind(this, group._id, member.user._id)}
                                                                 className="col-8 btn btn-lg btn-danger mr-1">
                                                                 Delete
                                                             </button>
@@ -260,6 +258,7 @@ GroupMembers.propTypes = {
     getGroupMembers: PropTypes.func.isRequired,
     createAdmin: PropTypes.func.isRequired,
     deleteAdmin: PropTypes.func.isRequired,
+    removeMember: PropTypes.func.isRequired,
 };
 
 
@@ -270,5 +269,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {getGroupMembers, createAdmin, deleteAdmin}
+    {getGroupMembers, createAdmin, deleteAdmin, removeMember}
 )(GroupMembers);

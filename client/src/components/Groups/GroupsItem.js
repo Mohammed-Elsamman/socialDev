@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {deleteGroup, getGroup,askToJoinGroup,cancelToJoinGroup} from "../../actions/groupActions";
+import {deleteGroup, getGroup, askToJoinGroup, cancelToJoinGroup} from "../../actions/groupActions";
 import isEmpty from "../../validation/is-empty";
 
 class GroupsItem extends Component {
@@ -13,6 +13,7 @@ class GroupsItem extends Component {
         let memperIDs = [];
         let requestIDs = [];
         let managerIDs = [];
+        let getgroup = false;
         if (group.members) {
             memperIDs = group.members.map(member => member.user);
         }
@@ -41,7 +42,7 @@ class GroupsItem extends Component {
         } else if (requestIDs.indexOf(auth.user.id) >= 0) {
             joinButton = (
                 <button
-                    onClick={this.props.cancelToJoinGroup.bind(this,  group._id,auth.user.id)}
+                    onClick={this.props.cancelToJoinGroup.bind(this, group._id, auth.user.id, getgroup)}
                     className="btn btn-danger">
                     cancel the request
                 </button>
@@ -49,7 +50,7 @@ class GroupsItem extends Component {
         } else {
             joinButton = (
                 <button
-                    onClick={this.props.askToJoinGroup.bind(this,  group._id,auth.user.id)}
+                    onClick={this.props.askToJoinGroup.bind(this, group._id, auth.user.id,getgroup)}
                     className="btn btn-info">
                     Join The Group
                 </button>
@@ -113,5 +114,5 @@ GroupsItem.propTypes = {
 
 export default connect(
     mapStateToProps,
-    {deleteGroup, getGroup,askToJoinGroup,cancelToJoinGroup}
+    {deleteGroup, getGroup, askToJoinGroup, cancelToJoinGroup}
 )(GroupsItem);

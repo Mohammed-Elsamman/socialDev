@@ -14,14 +14,13 @@ class GroupRequests extends Component {
 
     render() {
         const {group, loading} = this.props.group;
-        console.log(group);
         const {auth} = this.props
         let groupAbout;
         let groupMembers;
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
-            groupAbout = <GroupAbout group={group}/>
+            groupAbout = <GroupAbout group={group} auth={auth}/>
             if (group.requests.length > 0) {
                 groupMembers = (
                     <div className="row mb-1">

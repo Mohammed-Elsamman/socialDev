@@ -13,16 +13,16 @@ class PostItem extends Component {
 
     }
 
-    onClickLike(postId,groupId) {
-        this.props.addLike(postId,groupId)
+    onClickLike(postId, groupId) {
+        this.props.addLike(postId, groupId)
     }
 
-    onClickUnlike(postId,groupId) {
-        this.props.removeLike(postId,groupId)
+    onClickUnlike(postId, groupId) {
+        this.props.removeLike(postId, groupId)
     }
 
-    findUserLike(likes) {
-        const {auth} = this.props;
+    findUserLike(likes, auth) {
+        let l = likes.filter(like => like.user === auth.user.id)
         if (likes.filter(like => like.user === auth.user.id).length > 0) {
             return true
         } else {
@@ -33,9 +33,9 @@ class PostItem extends Component {
     render() {
         const {post, auth, showActions} = this.props;
         let groupId = false;
-        if(post.group){
+        if (post.group) {
             groupId = post.group
-        };
+        }
         return (
             <div className="card card-body mb-3">
                 <div className="row mb-3">
@@ -58,17 +58,17 @@ class PostItem extends Component {
                             <span>
                         <button type="button"
                                 className="btn btn-light mr-1"
-                                onClick={this.onClickLike.bind(this, post._id,groupId)}
+                                onClick={this.onClickLike.bind(this, post._id, groupId)}
                         >
                             <i className={classnames("fas fa-thumbs-up", {
-                                "text-info": this.findUserLike(post.likes)
+                                "text-info": this.findUserLike(post.likes, auth)
                             })}/>
                             <span className="badge badge-light">
                                 {post.likes.length}
                             </span>
                         </button>
                         <button type="button" className="btn btn-light mr-1"
-                                onClick={this.onClickUnlike.bind(this, post._id,groupId)}
+                                onClick={this.onClickUnlike.bind(this, post._id, groupId)}
                         >
                             <i className="text-secondary fas fa-thumbs-down"/>
                         </button>

@@ -99,6 +99,7 @@ export const deletePost = (post_id) => dispatch => {
 export const addLike = (post_id, groupId) => dispatch => {
     axios.post(`/api/posts/like/${post_id}`)
         .then(res => {
+            console.log(groupId);
             if (groupId) {
                 return dispatch(getGroupPosts(groupId))
             } else {
@@ -118,6 +119,7 @@ export const removeLike = (post_id, groupId) => dispatch => {
     axios.delete(`/api/posts/unlike/${post_id}`,)
         .then(res => {
             if (groupId) {
+                console.log(groupId);
                 return dispatch(getGroupPosts(groupId))
             } else {
                 return dispatch(getPosts())

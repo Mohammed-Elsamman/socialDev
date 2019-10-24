@@ -21,10 +21,9 @@ class GroupManagers extends Component {
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
-            groupAbout = <GroupAbout group={group}/>
+            groupAbout = <GroupAbout group={group} auth={auth} man={man}/>
             if (group.managers.length > 0) {
                 if (group.user._id === auth.user.id) {
-                    console.log(99);
                     groupMembers = (
                         <div className="row mb-1">
                             {
@@ -66,7 +65,6 @@ class GroupManagers extends Component {
                     )
 
                 } else {
-                    console.log(88);
                     groupMembers = (
                         <div className="row">
                             {
