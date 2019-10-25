@@ -54,10 +54,10 @@ router.get('/:uid',
         Group.find({
             $or: [
                 {
-                    user: req.params.id
+                    user: req.params.uid
                 },
                 {
-                    "members.user": req.params.id
+                    "members.user": req.params.uid
                 }
             ]
         })

@@ -23,7 +23,7 @@ class Groups extends Component {
                     <GroupsItem key={group._id} group={group}/>
                 ));
             } else {
-                groupItems = <h4>No profiles found...</h4>;
+                groupItems = <h4>No groups found...</h4>;
             }
         }
 

@@ -4,7 +4,6 @@ import {setPostLoading} from "./postActions";
 
 //get all groups
 export const getGroups = () => dispatch => {
-    console.log(1111);
     axios.get("/api/groups/")
         .then(res =>
             dispatch({
@@ -32,6 +31,7 @@ export const createGroup = (groupDate, history) => dispatch => {
 };
 //get my groups
 export const getMyGroups = uid => dispatch => {
+    console.log(uid);
     axios.get(`/api/groups/${uid}`)
         .then(res => dispatch({
                 type: GET_GROUPS,
@@ -92,11 +92,9 @@ export const getGroupPosts = id => dispatch => {
 
 //send request to join a group
 export const askToJoinGroup = (id, uid, getgroup) => dispatch => {
-    console.log(5);
     axios.post(`/api/groups/askjoin/${id}/${uid}`)
         .then(res => {
             if (getgroup) {
-                console.log(getgroup);
                 return dispatch(getGroup(id))
             } else {
                 return dispatch(getGroups())
@@ -108,12 +106,10 @@ export const askToJoinGroup = (id, uid, getgroup) => dispatch => {
 
 //cancel request to join a group
 export const cancelToJoinGroup = (id, uid, getgroup) => dispatch => {
-    console.log(1)
     axios.post(`/api/groups/cancel/${id}/${uid}`)
         .then(res => {
 
             if (getgroup) {
-                console.log(getgroup);
                 return dispatch(getGroup(id))
             } else {
                 return dispatch(getGroups())
@@ -171,8 +167,6 @@ export const getGroupRequests = id => dispatch => {
 
 //create group admin
 export const createAdmin = (id, uid) => dispatch => {
-    console.log(id);
-    console.log(uid);
     axios.post(`/api/groups/addmanager/${id}/${uid}/`)
         .then(res => dispatch(getGroupMembers(id))
         ).catch(err =>
@@ -198,8 +192,6 @@ export const deleteAdmin = (id, uid,man) => dispatch => {
 
 //accept join request
 export const acceptJoin = (id, uid) => dispatch => {
-    console.log(id);
-    console.log(uid);
     axios.post(`/api/groups/join/${id}/${uid}/`)
         .then(res => dispatch(getGroupRequests(id))
         ).catch(err =>
@@ -219,8 +211,6 @@ export const refuseJoin = (id, uid) => dispatch => {
 
 //remove a member
 export const removeMember = (id, uid) => dispatch => {
-    console.log(id);
-    console.log(uid);
     axios.post(`/api/groups/removemember/${id}/${uid}/`)
         .then(res => dispatch(getGroupMembers(id))
         ).catch(err =>

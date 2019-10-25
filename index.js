@@ -19,9 +19,7 @@ mongoose
     .connect(dbLocal,{ useNewUrlParser: true })
     .then(() => console.log("done"))
     .catch(err => {
-        console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
         console.log(err);
-        console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
     });
 
 //passport middleware

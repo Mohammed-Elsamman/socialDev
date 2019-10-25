@@ -15,16 +15,26 @@ class CommentItem extends Component {
         return (
             <div className="card card-body mb-3">
                 <div className="row">
-                    <div className="col-md-2">
-                        <Link to="">
-                            <img
-                                className="rounded-circle d-none d-md-block"
-                                src={comment.avatar}
-                                alt=""
-                            />
-                        </Link>
-                        <br/>
-                        <p className="text-center">{comment.name}</p>
+                    <div className="col-md-2 row">
+                        <div className="col-md-12 row">
+                            <div className="col-md-2"/>
+                            <div className="col-md-8">
+                                <Link to="">
+                                    <img
+                                        className="rounded-circle d-none d-md-block"
+                                        src={comment.avatar}
+                                        alt=""
+                                    />
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="row col-md-12">
+                            <div className="col-md-2"/>
+                            <div className="col-md-8">
+                                <h4 className="text-center">{comment.name}</h4>
+                            </div>
+
+                        </div>
                     </div>
                     <div className="col-md-10 row">
                         <div className="col-11">
@@ -33,13 +43,13 @@ class CommentItem extends Component {
                             </p>
                         </div>
                         {comment.user === auth.user.id ? (
-                                <div>
-                                    <button className="btn btn-danger  mr-1"
-                                            onClick={this.onClickDelete.bind(this, postId, comment._id)}
-                                    >
-                                        <i className="fas fa-times"/>
-                                    </button>
-                                </div>
+                            <div>
+                                <button className="btn btn-danger  mr-1"
+                                        onClick={this.onClickDelete.bind(this, postId, comment._id)}
+                                >
+                                    <i className="fas fa-times"/>
+                                </button>
+                            </div>
                         ) : null}
                     </div>
                 </div>
