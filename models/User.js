@@ -22,7 +22,7 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    follwoing: [
+    following: [
         {
             user: {
                 type: Schema.Types.ObjectId,
@@ -30,7 +30,7 @@ const UserSchema = new Schema({
             }
         }
     ],
-    follwoers: [
+    followers: [
         {
             user: {
                 type: Schema.Types.ObjectId,

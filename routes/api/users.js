@@ -112,15 +112,15 @@ router.post(
                                 if (!follow_user) {
                                     return res.status(400).json({errors: {nouser: "your are not a user"}})
                                 } else {
-                                    if (user.follwoing.filter(follwo => follwo.user.toString() === follow_user.id).length > 0) {
+                                    if (user.following.filter(follwo => follwo.user.toString() === follow_user.id).length > 0) {
                                         return res.status(400).json({errors: {alreadyfollowed: 'you are already follow that user'}});
                                     }
                                 }
-                                follow_user.follwoers.unshift({user: user.id});
+                                follow_user.followers.unshift({user: user.id});
                                 follow_user.save().then(user => {
                                 })
-                                console.log(user.follwoing);
-                                user.follwoing.unshift({user: follow_user.id});
+                                console.log(user.following);
+                                user.following.unshift({user: follow_user.id});
                                 user.save().then(user => res.json(user))
                             })
                     }
@@ -146,16 +146,16 @@ router.post(
                                 if (!follow_user) {
                                     return res.status(400).json({errors: {nouser: "your are not a user"}})
                                 } else {
-                                    if (user.follwoing.filter(follwo => follwo.user.toString() === follow_user.id).length === 0) {
+                                    if (user.following.filter(follwo => follwo.user.toString() === follow_user.id).length === 0) {
                                         return res.status(400).json({errors: {alreadyfollowed: 'you are already not follow that user'}});
                                     }
                                 }
-                                let follwoers = follow_user.follwoers.map(follwoer => follwoer.user.toString()).indexOf(user.id)
-                                follow_user.follwoers.splice(follwoers, 1);
+                                let followers = follow_user.followers.map(follwoer => follwoer.user.toString()).indexOf(user.id)
+                                follow_user.followers.splice(followers, 1);
                                 follow_user.save().then(() => {
                                 })
-                                let follwoing = user.follwoing.map(follwoer => follwoer.user.toString()).indexOf(follow_user.id)
-                                user.follwoing.splice(follwoing, 1);
+                                let following = user.following.map(follwoer => follwoer.user.toString()).indexOf(follow_user.id)
+                                user.following.splice(following, 1);
                                 user.save().then(user => res.json(user))
                             })
 
@@ -176,14 +176,14 @@ router.get(
                 "password": 0,
                 "avatar": 0,
                 "data": 0,
-                "follwoers": 0,
+                "followers": 0,
             })
                 .then(user => {
 
                     if (!user) {
                         return res.status(400).json({errors: {nouser: "your are not a user"}})
                     }
-                    let ids = [...user.follwoing.map(follow => follow.user)];
+                    let ids = [...user.following.map(follow => follow.user)];
                     User.find({_id: {$in: ids}})
                         .then(user => res.json(user))
                 }).catch(err => res.status(404).json({errors: {usernotfound: "No user Found"}}))
@@ -201,7 +201,7 @@ router.get(
                     if (!user) {
                         return res.status(400).json({errors: {nouser: "your are not a user"}})
                     }
-                    let ids = [...user.follwoers.map(follower => follower.user)];
+                    let ids = [...user.followers.map(follower => follower.user)];
                     User.find({_id: {$in: ids}})
                         .then(user => res.json(user)
                         )

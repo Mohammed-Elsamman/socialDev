@@ -43,7 +43,7 @@ router.get(
 router.get("/handle/:handle", (req, res) => {
     const errors = {}
     Profile.findOne({handle: req.params.handle})
-        .populate('user', ['name', 'avatar'])
+        .populate('user', ['followers', 'avatar', 'name'])
         .then(profile => {
             if (!profile) {
                 errors.noprofile = "there is no profile for this user"
@@ -77,7 +77,7 @@ router.get("/user/:user_id", (req, res) => {
 // @access  Public
 router.get('/all', (req, res) => {
     Profile.find()
-        .populate('user', ['name', 'avatar', 'follwoers'])
+        .populate('user', ['name', 'avatar', 'followers'])
         .then(profiles => res.json(profiles))
         .catch(err => res.status(404).json({profile: 'There are no profiles'}));
 });
@@ -103,7 +103,7 @@ router.get('/suggestions',
             location: 0,
             githubusername: 0,
         })
-            .populate('user', ['follwoing','follwoers', 'avatar', 'name'])
+            .populate('user', ['following', 'followers', 'avatar', 'name'])
             .then(profiles => {
                 allUserProfile = profiles
             })
@@ -113,7 +113,7 @@ router.get('/suggestions',
                 let profile = myProfile[0];
                 let allProfiles = allUserProfile;
                 let suggestions = allProfiles.filter(prof => {
-                        let isFollwoer = prof.user.follwoers.map(follwoer => follwoer.user._id.toString()).indexOf(req.user.id)
+                        let isFollwoer = prof.user.followers.map(follwoer => follwoer.user._id.toString()).indexOf(req.user.id)
                         console.log(isFollwoer);
                         console.log(prof.user.name);
                         if (profile.skills.some(skill => (prof.skills.includes(skill))) && req.user.id !== prof.user.id && isFollwoer < 0) {

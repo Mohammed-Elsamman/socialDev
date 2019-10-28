@@ -8,6 +8,8 @@ import ProfileAbout from "./ProfileAbout";
 import ProfileHeader from "./ProfileHeader";
 import ProfileCreds from "./ProfileCreds";
 import ProfileGithub from "./ProfileGithub";
+import {followingUser, unFollowingUser} from "../../actions/followActions";
+
 
 class Profile extends Component {
     componentDidMount() {
@@ -24,35 +26,66 @@ class Profile extends Component {
     render() {
         const {profile, loading} = this.props.profile;
         const {auth} = this.props;
-
-
         let ProfileContent;
         let myPage;
         if (profile === null || loading) {
             ProfileContent = <Spinner/>
         } else {
             {
-                profile.user._id === auth.user.id ? (
+                if (profile.user._id === auth.user.id) {
                     myPage = (
                         <div className="row">
                             <div className="col-md-4 mb-3 ">
                                 <div className="card">
-                                    <Link to="/follwoers" className="btn btn-info">
-                                        follwoers
+                                    <Link to="/followers" className="btn btn-info">
+                                        followers
                                     </Link>
                                 </div>
                             </div>
                             <div className="col-md-4 mb-3 "></div>
                             <div className="col-md-4 mb-3">
                                 <div className="card">
-                                    <Link to="/follwoing" className="btn btn-info">
-                                        follwoing
+                                    <Link to="/following" className="btn btn-info">
+                                        following
                                     </Link>
                                 </div>
                             </div>
                         </div>
                     )
-                ) : null
+                } else {
+                    let isFollower = profile.user.followers.map(follower => follower.user).indexOf(auth.user.id)
+                    console.log(isFollower);
+                    if (isFollower < 0) {
+                        myPage = (
+                            <div className="row">
+                                <div className="col-md-4 mb-3 ">
+                                    <div className="card">
+                                        <button
+                                            onClick={this.props.followingUser.bind(this, auth.user.id, profile.user._id, this.props.history, this.props.match.params.handle)}
+                                            className="btn btn-info">
+                                            follow
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    } else {
+                        myPage = (
+                            <div className="row">
+                                <div className="col-md-4 mb-3 ">
+                                    <div className="card">
+                                        < button
+                                            onClick={this.props.unFollowingUser.bind(this, auth.user.id, profile.user._id, this.props.history, this.props.match.params.handle)}
+                                            className="btn btn-danger">
+                                            unfollow
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
+
+                }
             }
             ProfileContent = (
                 <div>
@@ -95,7 +128,9 @@ class Profile extends Component {
 Profile.propTypes = {
     profile: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    getProfileByHandel: PropTypes.func.isRequired
+    getProfileByHandel: PropTypes.func.isRequired,
+    followingUser: PropTypes.func.isRequired,
+    unFollowingUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -105,5 +140,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {getProfileByHandel}
+    {getProfileByHandel, followingUser, unFollowingUser}
 )(Profile);

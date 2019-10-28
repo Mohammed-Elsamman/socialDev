@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import Spinner from "../common/Spinner";
-import {getFollwoing,unFollowingUserPage} from "../../actions/followActions";
+import {getFollowing,unFollowingUserPage} from "../../actions/followActions";
 
-class Follwoing extends Component {
+class Following extends Component {
     componentDidMount() {
         const {auth} = this.props;
-        this.props.getFollwoing(auth.user.id)
+        this.props.getFollowing(auth.user.id)
     }
 
     render() {
@@ -84,13 +84,13 @@ const mapStateToProps = state => ({
     follow: state.follow
 })
 
-Follwoing.propTypes = {
+Following.propTypes = {
     auth: PropTypes.object.isRequired,
     follow: PropTypes.object.isRequired,
-    getFollwoing: PropTypes.func.isRequired,
+    getFollowing: PropTypes.func.isRequired,
     unFollowingUserPage: PropTypes.func.isRequired
 };
 export default connect(
     mapStateToProps,
-    {getFollwoing,unFollowingUserPage}
-)(Follwoing);
+    {getFollowing,unFollowingUserPage}
+)(Following);

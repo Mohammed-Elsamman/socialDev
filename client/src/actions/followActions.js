@@ -3,10 +3,10 @@ import {
     GET_FOLLOWERS,
     GET_FOLLOWING,
 } from "./types";
-import {getProfiles} from "./profileActions";
+import {getProfileByHandel, getProfiles} from "./profileActions";
 
 // Get Following
-export const getFollwoing = (id) => dispatch => {
+export const getFollowing = (id) => dispatch => {
     axios
         .get(`/api/user/following/${id}`)
         .then(res =>
@@ -43,22 +43,52 @@ export const getFollowers = (id) => dispatch => {
 
 
 //following user
-export const followingUser = (Id, followId) => dispatch => {
+export const followingUser = (Id, followId, history, profileHandle) => dispatch => {
+    console.log(profileHandle);
     axios.post(`/api/user/follow/${Id}/${followId}`)
-        .then(res =>
-            dispatch(getProfiles())
-        ).catch(err =>
-        dispatch(getProfiles())
+        .then(res => {
+                if (profileHandle) {
+                    console.log(1);
+                     history.push(`/profile/`)
+                    return history.push(`/profile/${profileHandle}`)
+                } else {
+                    return dispatch(getProfiles())
+                }
+            }
+        ).catch(err => {
+            if (profileHandle) {
+                console.log(1);
+                 history.push(`/profile/`)
+                return history.push(`/profile/${profileHandle}`)
+            } else {
+                return dispatch(getProfiles())
+            }
+        }
     );
 };
 
 //unfollowing user
-export const unFollowingUser = (Id, followId) => dispatch => {
+export const unFollowingUser = (Id, followId, history, profileHandle) => dispatch => {
+    console.log(profileHandle);
     axios.post(`/api/user/unfollow/${Id}/${followId}`)
-        .then(res =>
-            dispatch(getProfiles())
-        ).catch(err =>
-        dispatch(getProfiles())
+        .then(res => {
+                if (profileHandle) {
+                    console.log(1);
+                     history.push(`/profile/`)
+                    return history.push(`/profile/${profileHandle}`)
+                } else {
+                    return dispatch(getProfiles())
+                }
+            }
+        ).catch(err => {
+            if (profileHandle) {
+                console.log(1);
+                 history.push(`/profile/`)
+                return history.push(`/profile/${profileHandle}`)
+            } else {
+                return dispatch(getProfiles())
+            }
+        }
     );
 };
 
@@ -66,8 +96,8 @@ export const unFollowingUser = (Id, followId) => dispatch => {
 export const unFollowingUserPage = (Id, followId) => dispatch => {
     axios.post(`/api/user/unfollow/${Id}/${followId}`)
         .then(res =>
-            dispatch(getFollwoing(Id))
+            dispatch(getFollowing(Id))
         ).catch(err =>
-        dispatch(getFollwoing(Id))
+        dispatch(getFollowing(Id))
     );
 };

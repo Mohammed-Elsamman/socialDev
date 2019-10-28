@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 
 
 
-class Follwers extends Component {
+class Followers extends Component {
     componentDidMount() {
         const {auth} = this.props
         this.props.getFollowers(auth.user.id)
@@ -77,7 +77,7 @@ const mapStateToProps = state => ({
     follow: state.follow
 })
 
-Follwers.propTypes = {
+Followers.propTypes = {
     auth: PropTypes.object.isRequired,
     follow: PropTypes.object.isRequired,
     getFollowers: PropTypes.func.isRequired,
@@ -86,4 +86,4 @@ Follwers.propTypes = {
 export default connect(
     mapStateToProps,
     {getFollowers}
-)(Follwers);
+)(Followers);

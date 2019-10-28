@@ -39,7 +39,7 @@ router.get('/',
     (req, res) => {
         User.findById(req.user.id)
             .then(user => {
-                    let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
+                    let ids = [...user.following.map(follow => follow.user), req.user._id];
                     Post.aggregate([{$match: {user: {$in: ids}}}])
                         .then(posts => {
                             // let newPost = posts.map(post => {

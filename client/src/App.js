@@ -24,8 +24,8 @@ import Profile from "./components/profile/Profile";
 import NotFound from "./components/not-found/NotFound";
 import Posts from "./components/posts/Posts";
 import Post from "./components/post/Post";
-import Follwoing from "./components/follow/Follwoing";
-import Follwoers from "./components/follow/Follwoers";
+import Following from "./components/follow/Following";
+import Followers from "./components/follow/Followers";
 import UserPage from "./components/user-page/UserPage";
 import CreateGroup from "./components/create-edit-group/CreateGroup";
 import Groups from "./components/Groups/Groups";
@@ -76,10 +76,10 @@ class App extends Component {
                                 <PrivateRoute exact path="/my-page" component={UserPage}/>
                             </Switch>
                             <Switch>
-                                <PrivateRoute exact path="/follwoing" component={Follwoing}/>
+                                <PrivateRoute exact path="/following" component={Following}/>
                             </Switch>
                             <Switch>
-                                <PrivateRoute exact path="/follwoers" component={Follwoers}/>
+                                <PrivateRoute exact path="/followers" component={Followers}/>
                             </Switch>
                             <Switch>
                                 <PrivateRoute exact path="/post/:id" component={Post}/>
