@@ -47,7 +47,7 @@ class GroupManagers extends Component {
                                                         Profile
                                                     </Link>
                                                 </div>
-                                                {(group.user._id != manager.user._id )? (
+                                                {(group.user._id !== manager.user._id )? (
                                                     <div className="mt-1">
                                                         <button
                                                             onClick={this.props.deleteAdmin.bind(this, group._id, manager.user._id,man)}

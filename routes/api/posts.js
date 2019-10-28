@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const Post = require("../../models/Post");
 const User = require("../../models/User");
+const Group = require("../../models/Group")
 const validationPostInpot = require("../../validation/post");
 const validationCommentInpot = require("../../validation/comment");
 
@@ -40,9 +41,19 @@ router.get('/',
             .then(user => {
                     let ids = [...user.follwoing.map(follow => follow.user), req.user._id];
                     Post.aggregate([{$match: {user: {$in: ids}}}])
-                        .then(post => {
-                            console.log(post);
-                            res.json(post)
+                        .then(posts => {
+                            // let newPost = posts.map(post => {
+                            //     if (post.group) {
+                            //         Group.findById(post.group._id)
+                            //             .then(group => {
+                            //                 post.group = group
+                            //                 return post
+                            //             })
+                            //     } else {
+                            //         return post
+                            //     }
+                            // })
+                            res.json(posts)
                         })
                         .catch(err => res.status(404).json(err))
                 }
@@ -76,7 +87,7 @@ router.get('/:id',
     passport.authenticate('jwt', {session: false}),
     (req, res) => {
         Post.find({_id: req.params.id})
-            .populate('group', ['name','date'])
+            .populate('group', ['name', 'date'])
             .then(post => {
                 if (!post) {
                     res.status(404).json({nopst: "there is no post"})

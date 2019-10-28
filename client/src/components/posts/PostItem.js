@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import {deletePost, addLike, removeLike} from "../../actions/postActions";
-import CommentFeed from "../post/CommentFeed";
 
 class PostItem extends Component {
 
@@ -22,7 +21,6 @@ class PostItem extends Component {
     }
 
     findUserLike(likes, auth) {
-        let l = likes.filter(like => like.user === auth.user.id)
         if (likes.filter(like => like.user === auth.user.id).length > 0) {
             return true
         } else {
@@ -42,6 +40,7 @@ class PostItem extends Component {
         if (post.group) {
             console.log(typeof post.group.date);
             groupId = post.group
+            console.log(post);
             groupName = (
                 <div className='row mb-2'>
                     <div className="col-md-4">

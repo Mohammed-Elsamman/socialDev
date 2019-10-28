@@ -8,8 +8,6 @@ import ProfileAbout from "./ProfileAbout";
 import ProfileHeader from "./ProfileHeader";
 import ProfileCreds from "./ProfileCreds";
 import ProfileGithub from "./ProfileGithub";
-import isEmpty from "../../validation/is-empty";
-
 
 class Profile extends Component {
     componentDidMount() {
@@ -35,7 +33,7 @@ class Profile extends Component {
         } else {
             {
                 profile.user._id === auth.user.id ? (
-                    myPage =
+                    myPage = (
                         <div className="row">
                             <div className="col-md-4 mb-3 ">
                                 <div className="card">
@@ -53,6 +51,7 @@ class Profile extends Component {
                                 </div>
                             </div>
                         </div>
+                    )
                 ) : null
             }
             ProfileContent = (

@@ -69,5 +69,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {getGroups, getMyGroups})
-(Groups);
+    {getGroups, getMyGroups}
+)(Groups);

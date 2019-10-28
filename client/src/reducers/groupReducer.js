@@ -1,4 +1,4 @@
-import {GET_GROUP,GET_GROUPS,GET_POSTS,ADD_GROUP} from "../actions/types";
+import {GET_GROUP,GET_GROUPS,GET_POSTS} from "../actions/types";
 
 const initialState = {
     group: null,

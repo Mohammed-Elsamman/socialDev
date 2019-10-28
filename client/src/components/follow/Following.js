@@ -49,7 +49,7 @@ class Follwoing extends Component {
                                             </Link>
                                         </div>
                                         <div className="col-md-4">
-                                            <Link to={"/follwoing"} className="btn btn-lg btn-danger mr-1"
+                                            <Link to={"/following"} className="btn btn-lg btn-danger mr-1"
                                                   onClick={this.props.unFollowingUserPage.bind(this, auth.user.id, follow._id)}
                                             >
                                                 unfollow

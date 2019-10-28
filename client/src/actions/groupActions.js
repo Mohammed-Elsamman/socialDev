@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {GET_GROUP, GET_GROUPS, ADD_GROUP, GET_ERRORS, GET_POSTS} from "./types";
+import {GET_GROUP, GET_GROUPS, GET_ERRORS, GET_POSTS} from "./types";
 import {setPostLoading} from "./postActions";
 
 //get all groups

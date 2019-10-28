@@ -6,17 +6,15 @@ import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
 import {getGroupMembers, createAdmin, deleteAdmin, removeMember} from "../../actions/groupActions";
 
-
 class GroupMembers extends Component {
     componentDidMount() {
         this.props.getGroupMembers(this.props.match.params.id)
     }
 
     render() {
-        const {group, loading} = this.props.group
-        const {auth} = this.props
+        const {group, loading} = this.props.group;
+        const {auth} = this.props;
         let groupAbout;
-        let membersContent;
         let groupMembers;
         if (group === null || loading) {
             groupAbout = <Spinner/>
@@ -65,7 +63,7 @@ class GroupMembers extends Component {
                                     group.members.map(member => {
                                         let isMemberAdmin = adminIds.indexOf(member.user._id)
                                         if ((group.user._id === member.user._id)) {
-                                            return membersContent = (
+                                            return (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
                                                         <Link to="">
@@ -89,7 +87,7 @@ class GroupMembers extends Component {
                                                 </div>
                                             )
                                         } else if (isMemberAdmin < 0) {
-                                            return membersContent = (
+                                            return (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
                                                         <Link to="">
@@ -128,7 +126,7 @@ class GroupMembers extends Component {
                                                 </div>
                                             )
                                         } else {
-                                            return membersContent = (
+                                            return (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
                                                         <Link to="">
@@ -177,7 +175,7 @@ class GroupMembers extends Component {
                                     group.members.map(member => {
                                         let isMemberAdmin = adminIds.indexOf(member.user._id)
                                         if (isMemberAdmin < 0) {
-                                            return membersContent = (
+                                            return (
                                                 <div key={member._id} className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
                                                         <Link to="">
@@ -209,7 +207,7 @@ class GroupMembers extends Component {
                                                 </div>
                                             )
                                         } else {
-                                            return membersContent = (
+                                            return (
                                                 <div className="row col-md-6">
                                                     <div className="col-md-5 mt-2">
                                                         <Link to="">

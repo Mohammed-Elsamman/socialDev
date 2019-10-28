@@ -106,7 +106,6 @@ router.post(
                 .then(user => {
                     if (!user) {
                         return res.status(400).json({errors: {nouser: "your are not a user"}})
-
                     } else {
                         User.findById(req.params.follow_id)
                             .then(follow_user => {
@@ -120,6 +119,7 @@ router.post(
                                 follow_user.follwoers.unshift({user: user.id});
                                 follow_user.save().then(user => {
                                 })
+                                console.log(user.follwoing);
                                 user.follwoing.unshift({user: follow_user.id});
                                 user.save().then(user => res.json(user))
                             })

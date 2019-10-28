@@ -5,7 +5,6 @@ import Spinner from '../common/Spinner';
 import {getUserPosts} from "../../actions/postActions";
 import {getCurrentProfile} from "../../actions/profileActions";
 import PostFeed from "../posts/PostFeed";
-import {Link} from "react-router-dom";
 import ProfileHeader from "../profile/ProfileHeader";
 import PostForm from "../posts/PostForm";
 

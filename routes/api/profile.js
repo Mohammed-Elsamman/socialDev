@@ -77,10 +77,60 @@ router.get("/user/:user_id", (req, res) => {
 // @access  Public
 router.get('/all', (req, res) => {
     Profile.find()
-        .populate('user', ['name', 'avatar','follwoers'])
+        .populate('user', ['name', 'avatar', 'follwoers'])
         .then(profiles => res.json(profiles))
-        .catch(err => res.status(404).json({ profile: 'There are no profiles' }));
+        .catch(err => res.status(404).json({profile: 'There are no profiles'}));
 });
+
+// @route   GET api/profile/suggest
+// @desc    Get suggestions profiles
+// @access  Public
+router.get('/suggestions',
+    passport.authenticate('jwt', {session: false}),
+    (req, res) => {
+        let myProfile;
+        let allUserProfile;
+        const userProfile = Profile.find({user: req.user._id})
+            .then(profile => {
+                myProfile = profile;
+            })
+            .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+        const usersProfile = Profile.find({}, {
+            experience: 0,
+            social: 0,
+            education: 0,
+            company: 0,
+            location: 0,
+            githubusername: 0,
+        })
+            .populate('user', ['follwoing','follwoers', 'avatar', 'name'])
+            .then(profiles => {
+                allUserProfile = profiles
+            })
+            .catch(err => err)
+        Promise.all([userProfile, usersProfile])
+            .then(() => {
+                let profile = myProfile[0];
+                let allProfiles = allUserProfile;
+                let suggestions = allProfiles.filter(prof => {
+                        let isFollwoer = prof.user.follwoers.map(follwoer => follwoer.user._id.toString()).indexOf(req.user.id)
+                        console.log(isFollwoer);
+                        console.log(prof.user.name);
+                        if (profile.skills.some(skill => (prof.skills.includes(skill))) && req.user.id !== prof.user.id && isFollwoer < 0) {
+                            return prof
+                        }
+                    }
+                );
+                if (suggestions.length <= 4) {
+                    console.log(2);
+                    return res.json(suggestions)
+                } else {
+                    let startProfile = Math.floor(Math.random()) * (suggestions.length - 4)
+                    return suggestions.slice(startProfile, startProfile + 4)
+                }
+            })
+    })
+
 
 // @route   POST api/profile/
 // @desc    create profile

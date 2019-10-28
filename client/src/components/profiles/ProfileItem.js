@@ -10,7 +10,7 @@ class ProfileItem extends Component {
     render() {
         const {profile, auth} = this.props;
         let followButton;
-        if (profile.user.follwoers.length === 0) {
+        if (profile.user.follwoers.map(follower => follower.user.toString()).indexOf(auth.user.id) < 0) {
             followButton = (
                 <button
                     onClick={this.props.followingUser.bind(this, auth.user.id, profile.user._id)}
@@ -19,8 +19,9 @@ class ProfileItem extends Component {
                 </button>
             )
         } else {
-            followButton = profile.user.follwoers.map(follow =>
-                < button key={follow._id}
+            console.log(1);
+            followButton = (
+                < button
                          onClick={this.props.unFollowingUser.bind(this, auth.user.id, profile.user._id)}
                          className="btn btn-danger">
                     unfollow
