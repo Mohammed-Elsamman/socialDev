@@ -34,13 +34,8 @@ class PostItem extends Component {
         let groupName = false;
         let postedeTime = new Date(post.date)
         let tmiePost = postedeTime.toDateString()
-        console.log(tmiePost);
-        console.log(post.date);
-
         if (post.group) {
-            console.log(typeof post.group.date);
             groupId = post.group
-            console.log(post);
             groupName = (
                 <div className='row mb-2'>
                     <div className="col-md-4">

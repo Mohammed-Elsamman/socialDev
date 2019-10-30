@@ -150,6 +150,9 @@ router.post('/',
             let profile = await Profile.findOneAndUpdate(
                 {user: req.user.id}, {$set: profileFields}, {new: true},
             );
+            let user = await User.findOneAndUpdate(
+                {_id: req.user._id}, {$set: {handle:profileFields.handle}}, {new: true},
+            );
             try {
                 await res.json(profile)
             } catch (e) {
@@ -165,6 +168,9 @@ router.post('/',
             // save profile
             profile = new Profile(profileFields)
             profile = await profile.save()
+             User.findOneAndUpdate(
+                {id: req.user.id}, {$set: {handle:profileFields.handle}}, {new: true},
+            );
             try {
                 await res.json(profile)
             } catch (e) {

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
 import {getGroupMembers, createAdmin, deleteAdmin, removeMember} from "../../actions/groupActions";
+import {loginUser} from "../../actions/authActions";
 
 class GroupMembers extends Component {
     componentDidMount() {
@@ -24,10 +25,12 @@ class GroupMembers extends Component {
                 let adminIds = group.managers.map(manager => manager.user);
                 let isUserIsAdmin = adminIds.indexOf(auth.user.id);
                 if (isUserIsAdmin < 0) {
+
                     groupMembers = (
                         <div className="row">
                             {
                                 group.members.map(member => (
+
                                         <div key={member._id} className="row col-md-6">
                                             <div className="col-md-5 mt-2">
                                                 <Link to="">

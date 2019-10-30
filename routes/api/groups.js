@@ -85,9 +85,9 @@ router.get('/group/:id',
 router.get('/:id/members',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        const group = await Group.find({_id: req.params.id})
+        const group = await Group.findById(req.params.id)
             .populate('members.user', ['name', 'avatar', 'handle'])
-            .populate('user', ['name', 'avatar'])
+            .populate('user', ['name', 'avatar', 'handle']);
         try {
             await res.json(group)
         } catch (e) {

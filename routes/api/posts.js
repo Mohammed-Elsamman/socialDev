@@ -154,7 +154,6 @@ router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
         let post = await Post.findById(req.params.id);
-        console.log(post);
         if (!post) res.status(404).json({nopst: "there is no post"});
         if (post.user.toString() !== req.user.id)
             return res.status(404).json({noauthorized: "user no authorized"});

@@ -54,7 +54,6 @@ class Profile extends Component {
                     )
                 } else {
                     let isFollower = profile.user.followers.map(follower => follower.user).indexOf(auth.user.id)
-                    console.log(isFollower);
                     if (isFollower < 0) {
                         myPage = (
                             <div className="row">

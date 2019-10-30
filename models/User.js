@@ -10,6 +10,9 @@ const UserSchema = new Schema({
         type: String,
         require: true
     },
+    handle: {
+        type: String,
+    },
     password: {
         type: String,
         require: true

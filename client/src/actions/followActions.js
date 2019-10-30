@@ -44,11 +44,9 @@ export const getFollowers = (id) => dispatch => {
 
 //following user
 export const followingUser = (Id, followId, history, profileHandle) => dispatch => {
-    console.log(profileHandle);
     axios.post(`/api/user/follow/${Id}/${followId}`)
         .then(res => {
                 if (profileHandle) {
-                    console.log(1);
                      history.push(`/profile/`)
                     return history.push(`/profile/${profileHandle}`)
                 } else {
@@ -57,7 +55,6 @@ export const followingUser = (Id, followId, history, profileHandle) => dispatch 
             }
         ).catch(err => {
             if (profileHandle) {
-                console.log(1);
                  history.push(`/profile/`)
                 return history.push(`/profile/${profileHandle}`)
             } else {
@@ -69,11 +66,9 @@ export const followingUser = (Id, followId, history, profileHandle) => dispatch 
 
 //unfollowing user
 export const unFollowingUser = (Id, followId, history, profileHandle) => dispatch => {
-    console.log(profileHandle);
     axios.post(`/api/user/unfollow/${Id}/${followId}`)
         .then(res => {
                 if (profileHandle) {
-                    console.log(1);
                      history.push(`/profile/`)
                     return history.push(`/profile/${profileHandle}`)
                 } else {
@@ -82,7 +77,6 @@ export const unFollowingUser = (Id, followId, history, profileHandle) => dispatc
             }
         ).catch(err => {
             if (profileHandle) {
-                console.log(1);
                  history.push(`/profile/`)
                 return history.push(`/profile/${profileHandle}`)
             } else {

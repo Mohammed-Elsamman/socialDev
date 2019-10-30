@@ -31,7 +31,6 @@ export const createGroup = (groupDate, history) => dispatch => {
 };
 //get my groups
 export const getMyGroups = uid => dispatch => {
-    console.log(uid);
     axios.get(`/api/groups/${uid}`)
         .then(res => dispatch({
                 type: GET_GROUPS,

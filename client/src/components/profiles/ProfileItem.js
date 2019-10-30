@@ -19,7 +19,6 @@ class ProfileItem extends Component {
                 </button>
             )
         } else {
-            console.log(1);
             followButton = (
                 < button
                          onClick={this.props.unFollowingUser.bind(this, auth.user.id, profile.user._id)}
