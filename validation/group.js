@@ -1,24 +1,18 @@
 const validator = require('validator');
 const isEmpty = require('./is-empty');
+const getRequiredErrors = require('./getRequiredErrors');
+
 
 module.exports = validateGroupInput = data => {
-    let errors = {};
-
-    data.name = !isEmpty(data.name) ? data.name : "";
-    data.description = !isEmpty(data.description) ? data.description : "";
-    data.interestedin = !isEmpty(data.interestedin) ? data.interestedin : "";
-
-    if (validator.isEmpty(data.name)) {
-        errors.name = "name is required"
-    }
-    if (validator.isEmpty(data.description)) {
-        errors.description = "description is required"
-    }
-    if (validator.isEmpty(data.interestedin)) {
-        errors.interestedin = "interestedin is required"
-    }
+    data.name = validator.isEmpty(data.name) ? data.name : "";
+    data.description = validator.isEmpty(data.description) ? data.description : "";
+    data.interestedin = validator.isEmpty(data.interestedin) ? data.interestedin : "";
+    let d =validator.isEmpty(data.name)
+    console.log(d);
+    let keys = ['name', 'description', 'interestedin']
+    let errors = getRequiredErrors(data,keys,{});
     return {
         errors,
-        isValid: isEmpty(errors),
+        isValid: validator.isEmpty(errors),
     }
 };

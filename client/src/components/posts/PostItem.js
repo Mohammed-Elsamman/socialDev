@@ -76,7 +76,6 @@ class PostItem extends Component {
                             <div className="col-md-12">
                                 posted on {tmiePost}
                             </div>
-
                         </div>
                         <div className="col-md-1 ml-5">
                             {showActions ? (

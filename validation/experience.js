@@ -1,31 +1,12 @@
-const validator = require('validator');
 const isEmpty = require('./is-empty');
+const getRequiredErrors = require('./getRequiredErrors');
 
-module.exports = validateLoginInput = data => {
-    let errors = {};
-
+module.exports = validateExperienceInput = data => {
     data.title = !isEmpty(data.title) ? data.title : "";
     data.company = !isEmpty(data.company) ? data.company : "";
     data.from = !isEmpty(data.from) ? data.from : "";
-
-
-    if (validator.isEmpty(data.title)) {
-        errors.title = "title is required"
-    }
-
-    if (validator.isEmpty(data.company)) {
-        errors.company = "company is required"
-    }
-    if (validator.isEmpty(data.location)) {
-        errors.location = "location is required"
-    }
-
-    if (validator.isEmpty(data.from)) {
-        errors.from = "from date is required"
-    }
-
-
-
+    let keys = ['title', 'company', 'location', 'from']
+    let errors = getRequiredErrors(data,keys,{})
     return {
         errors,
         isValid: isEmpty(errors),
