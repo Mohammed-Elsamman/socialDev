@@ -17,9 +17,20 @@ class GroupMembers extends Component {
         const {auth} = this.props;
         let groupAbout;
         let groupMembers;
+        let groupPost;
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
+            groupPost = (
+                <div className="row">
+                    <div className="col-md-12">
+                        <Link to={`/groups/${group._id}`} className="btn btn-light mb-3 float-left">
+                            Posts
+                        </Link>
+                    </div>
+                    <div className="col-md-6"/>
+                </div>
+            );
             groupAbout = <GroupAbout group={group} auth={auth}/>
             if (group.members.length > 0) {
                 let adminIds = group.managers.map(manager => manager.user);
@@ -246,6 +257,8 @@ class GroupMembers extends Component {
         return (
             <div>
                 {groupAbout}
+                {groupPost}
+                <h3>Group Members</h3>
                 {groupMembers}
             </div>
         );

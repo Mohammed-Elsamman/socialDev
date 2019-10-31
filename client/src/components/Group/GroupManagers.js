@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from '../common/Spinner';
 import GroupAbout from "./GroupAbout";
-import {getGroupManagers,deleteAdmin} from "../../actions/groupActions";
+import {getGroupManagers, deleteAdmin} from "../../actions/groupActions";
 
 
 class GroupManagers extends Component {
@@ -13,18 +13,30 @@ class GroupManagers extends Component {
     }
 
     render() {
-        const {group, loading} = this.props.group
+        const {group, loading} = this.props.group;
+        console.log(group);
         const {auth} = this.props;
         let groupAbout;
-        let groupMembers;
+        let groupPost;
+        let groupManagers;
         let man = true;
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
+            groupPost = (
+                <div className="row">
+                    <div className="col-md-12">
+                        <Link to={`/groups/${group._id}`} className="btn btn-light mb-3 float-left">
+                            Posts
+                        </Link>
+                    </div>
+                    <div className="col-md-6"/>
+                </div>
+            );
             groupAbout = <GroupAbout group={group} auth={auth} man={man}/>
             if (group.managers.length > 0) {
                 if (group.user._id === auth.user.id) {
-                    groupMembers = (
+                    groupManagers = (
                         <div className="row mb-1">
                             {
                                 group.managers.map(manager => (
@@ -47,10 +59,10 @@ class GroupManagers extends Component {
                                                         Profile
                                                     </Link>
                                                 </div>
-                                                {(group.user._id !== manager.user._id )? (
+                                                {(group.user._id !== manager.user._id) ? (
                                                     <div className="mt-1">
                                                         <button
-                                                            onClick={this.props.deleteAdmin.bind(this, group._id, manager.user._id,man)}
+                                                            onClick={this.props.deleteAdmin.bind(this, group._id, manager.user._id, man)}
                                                             className="col-8 btn btn-lg btn-danger mr-1">
                                                             Delete Admin
                                                         </button>
@@ -65,7 +77,7 @@ class GroupManagers extends Component {
                     )
 
                 } else {
-                    groupMembers = (
+                    groupManagers = (
                         <div className="row">
                             {
                                 group.managers.map(manager => (
@@ -103,7 +115,9 @@ class GroupManagers extends Component {
         return (
             <div>
                 {groupAbout}
-                {groupMembers}
+                {groupPost}
+                <h3>Group Managers</h3>
+                {groupManagers}
             </div>
         );
     }
@@ -125,5 +139,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {getGroupManagers,deleteAdmin}
+    {getGroupManagers, deleteAdmin}
 )(GroupManagers);

@@ -5,16 +5,15 @@ import Spinner from "../common/Spinner";
 import {getFollowers} from "../../actions/followActions";
 import {Link} from "react-router-dom";
 
-
-
 class Followers extends Component {
     componentDidMount() {
-        const {auth} = this.props
+        const {auth} = this.props;
         this.props.getFollowers(auth.user.id)
     }
 
     render() {
         const {followers,loading}=this.props.follow;
+        const {auth} = this.props;
         let followersItem
         if (followers === null || loading) {
             followersItem = <Spinner/>
@@ -58,14 +57,25 @@ class Followers extends Component {
                 })
             } else {
                 followersItem = (
-                    <div>
-                        no following
+                    <div className="col-md-12">
+                        <h2>
+                            Thier Is No Following For You
+                        </h2>
                     </div>
                 )
             }
         }
         return (
             <div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <Link to={`/profile/${auth.user.handle}`} className="btn btn-light mb-3 float-left">
+                            My Profile
+                        </Link>
+                    </div>
+                    <div className="col-md-6"/>
+                </div>
+                <h3>My Followers</h3>
                 {followersItem}
             </div>
         );

@@ -16,13 +16,24 @@ class GroupRequests extends Component {
         const {group, loading} = this.props.group;
         const {auth} = this.props
         let groupAbout;
-        let groupMembers;
+        let groupRequests;
+        let groupPost;
         if (group === null || loading) {
             groupAbout = <Spinner/>
         } else {
+            groupPost = (
+                <div className="row">
+                    <div className="col-md-12">
+                        <Link to={`/groups/${group._id}`} className="btn btn-light mb-3 float-left">
+                            Posts
+                        </Link>
+                    </div>
+                    <div className="col-md-6"/>
+                </div>
+            );
             groupAbout = <GroupAbout group={group} auth={auth}/>
             if (group.requests.length > 0) {
-                groupMembers = (
+                groupRequests = (
                     <div className="row mb-1">
                         {
                             group.requests.map(request => (
@@ -66,12 +77,22 @@ class GroupRequests extends Component {
                         }
                     </div>
                 )
+            } else {
+                groupRequests = (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <h4>thier is no requests for this group</h4>
+                        </div>
+                    </div>
+                );
             }
         }
         return (
             <div>
                 {groupAbout}
-                {groupMembers}
+                {groupPost}
+                <h3>Group Requests</h3>
+                {groupRequests}
             </div>
         );
     }

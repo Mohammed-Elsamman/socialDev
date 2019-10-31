@@ -21,7 +21,7 @@ class Following extends Component {
             if (following.length > 0) {
                 followongItem = following.map(follow => {
                     return (
-                        <div className="card card-body mb-3">
+                        <div key={follow._id} className="card card-body mb-3">
                             <div className="row">
                                 <div className="col-md-2">
                                     <Link to="">
@@ -65,14 +65,25 @@ class Following extends Component {
                 })
             } else {
                 followongItem = (
-                    <div>
-                        no following
+                    <div className="col-md-12">
+                        <h2>
+                            You Don't Following Any Developers
+                        </h2>
                     </div>
                 )
             }
         }
         return (
             <div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <Link to={`/profile/${auth.user.handle}`} className="btn btn-light mb-3 float-left">
+                            My Profile
+                        </Link>
+                    </div>
+                    <div className="col-md-6"/>
+                </div>
+                <h3>My Following</h3>
                 {followongItem}
             </div>
         );

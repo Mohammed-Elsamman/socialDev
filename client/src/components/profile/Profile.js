@@ -10,7 +10,6 @@ import ProfileCreds from "./ProfileCreds";
 import ProfileGithub from "./ProfileGithub";
 import {followingUser, unFollowingUser} from "../../actions/followActions";
 
-
 class Profile extends Component {
     componentDidMount() {
         if (this.props.match.params.handle)
