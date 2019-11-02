@@ -16,16 +16,13 @@ router.get('/',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
         const errors = {};
-        let profile = await Profile.findOne({user: req.user.id})
-            .populate('user', ['name', 'avatar'])
-        if (!profile) {
-            errors.noprofile = "there is no profile for this user"
-            res.status(404).json(errors)
-        }
         try {
+            let profile = await Profile.findOne({user: req.user.id})
+                .populate('user', ['name', 'avatar'])
             await res.json(profile)
         } catch (e) {
-            res.status(404).json(e)
+            errors.noprofile = "there is no profile for this user"
+            res.status(404).json(errors)
         }
     });
 
@@ -34,16 +31,13 @@ router.get('/',
 // @access  public
 router.get("/handle/:handle", async (req, res) => {
     const errors = {}
-    const profile = await Profile.findOne({handle: req.params.handle})
-        .populate('user', ['followers', 'avatar', 'name']);
-    if (!profile) {
-        errors.noprofile = "there is no profile for this user";
-        return res.status(404).json(errors)
-    }
     try {
+        const profile = await Profile.findOne({handle: req.params.handle})
+            .populate('user', ['followers', 'avatar', 'name']);
         return await res.json(profile)
     } catch (e) {
-        return res.status(404).json(err)
+        errors.noprofile = "there is no profile for this user";
+        return res.status(404).json(errors)
     }
 });
 
@@ -52,16 +46,13 @@ router.get("/handle/:handle", async (req, res) => {
 // @access  public
 router.get("/user/:user_id", async (req, res) => {
     const errors = {}
-    const profile = await Profile.findOne({user: req.params.user_id})
-        .populate('user', ['name', 'avatar'])
-    if (!profile) {
-        errors.noprofile = "there is no profile for this user";
-        return res.status(404).json(errors)
-    }
     try {
+        const profile = await Profile.findOne({user: req.params.user_id})
+            .populate('user', ['name', 'avatar'])
         return await res.json(profile)
     } catch (e) {
-        return res.status(404).json(err)
+        errors.noprofile = "there is no profile for this user";
+        return res.status(404).json(errors)
     }
 });
 
@@ -69,12 +60,14 @@ router.get("/user/:user_id", async (req, res) => {
 // @desc    Get all profiles
 // @access  Public
 router.get('/all', async (req, res) => {
-    const profile = await Profile.find()
-        .populate('user', ['name', 'avatar', 'followers'])
+    const errors = {}
     try {
+        const profile = await Profile.find()
+            .populate('user', ['name', 'avatar', 'followers'])
         return await res.json(profile)
     } catch (e) {
-        return res.status(404).json(err)
+        errors.noprofile = "there are no profiles";
+        return res.status(404).json(errors)
     }
 });
 
@@ -85,7 +78,7 @@ router.get('/suggestions',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
 
-        const myProfile = await Profile.find({user: req.user._id})
+        const myProfile = await Profile.find({user: req.user._id})[0]
         const allUserProfile = await Profile.find({}, {
             experience: 0, social: 0, education: 0,
             company: 0, location: 0, githubusername: 0,
@@ -93,11 +86,9 @@ router.get('/suggestions',
 
         Promise.all([myProfile, allUserProfile])
             .then(() => {
-                let profile = myProfile[0];
-                let allProfiles = allUserProfile;
-                let suggestions = allProfiles.filter(prof => {
+                let suggestions = allUserProfile.filter(prof => {
                         let isFollwoer = prof.user.followers.map(follwoer => follwoer.user._id.toString()).indexOf(req.user.id);
-                        if (profile.skills.some(skill => (prof.skills.includes(skill))) && req.user.id !== prof.user.id && isFollwoer < 0)
+                        if (myProfile.skills.some(skill => (prof.skills.includes(skill))) && req.user.id !== prof.user.id && isFollwoer < 0)
                             return prof
                     }
                 );
@@ -117,13 +108,14 @@ router.get('/suggestions',
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        const {errors, isValid} = validateProfileInput(req.body);
         //check validation
+        const {errors, isValid} = validateProfileInput(req.body);
         if (!isValid)
             return res.status(404).json({errors});
 
         const profileFields = {};
-        profileFields.user = req.user.id;
+        const user = req.user.id
+        profileFields.user = user;
         const {
             handle, status, company, website, location, skills, bio,
             githubusername, facebook, twitter, youtube, instagram, linkedin
@@ -144,39 +136,34 @@ router.post('/',
         if (instagram) profileFields.social.instagram = instagram;
         if (linkedin) profileFields.social.linkedin = linkedin;
 
-        let profile = await Profile.findOne({user: req.user.id})
-        //update the profile
-        if (profile) {
-            let profile = await Profile.findOneAndUpdate(
-                {user: req.user.id}, {$set: profileFields}, {new: true},
-            );
-            let user = await User.findOneAndUpdate(
-                {_id: req.user._id}, {$set: {handle:profileFields.handle}}, {new: true},
-            );
-            try {
-                await res.json(profile)
-            } catch (e) {
-                await res.json(e)
-            }
-        } else {
-            //    create profile
-            let profile = await Profile.findOne({handle: profileFields.handle})
+        try {
+            let profile = await Profile.findOne({user})
+            //update the profile
             if (profile) {
-                errors.handle = "That handle already exists";
-                res.status(400).json(errors);
+                profile = await Profile.findOneAndUpdate({user}, {$set: profileFields}, {new: true});
+                await User.findOneAndUpdate(
+                    {_id: req.user._id}, {$set: {handle: profileFields.handle}}, {new: true},
+                );
+            } else {
+                //    create profile
+                profile = await Profile.findOne({handle: profileFields.handle})
+                if (profile) {
+                    errors.handle = "That handle already exists";
+                    res.status(400).json(errors);
+                }
+                // save profile
+                profile = new Profile(profileFields)
+                profile = await profile.save();
+                User.findOneAndUpdate(
+                    {id: req.user.id}, {$set: {handle: profileFields.handle}}, {new: true},
+                );
             }
-            // save profile
-            profile = new Profile(profileFields)
-            profile = await profile.save()
-             User.findOneAndUpdate(
-                {id: req.user.id}, {$set: {handle:profileFields.handle}}, {new: true},
-            );
-            try {
-                await res.json(profile)
-            } catch (e) {
-                await res.json(e)
-            }
+            await res.json(profile)
+        } catch (e) {
+            errors.noprofile = "there are no profile for that user";
+            return res.status(404).json(errors)
         }
+
     });
 
 // @route DELETE api/profile/delete
@@ -185,9 +172,13 @@ router.post('/',
 router.delete("/",
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        await Profile.findOneAndRemove({user: req.user.id});
-        await User.findOneAndRemove({_id: req.user.id});
-        return await res.json({success: true});
+        try {
+            await Profile.findOneAndRemove({user: req.user.id});
+            await User.findOneAndRemove({_id: req.user.id});
+            return await res.json({success: true});
+        } catch (e) {
+            return res.status(404).json(e)
+        }
     }
 );
 
@@ -202,18 +193,19 @@ router.post('/experience',
         if (!isValid)
             return res.status(404).json({errors})
 
-        let profile = await Profile.findOne({user: req.user.id})
-        const {title, company, location, from, to, current, description} = req.body;
-        const newExpe = {
-            title, company, to, from,
-            location, current, description,
-        };
-        profile.experience.unshift(newExpe);
-        profile = await profile.save();
         try {
+            let profile = await Profile.findOne({user: req.user.id})
+            const {title, company, location, from, to, current, description} = req.body;
+            const newExpe = {
+                title, company, to, from,
+                location, current, description,
+            };
+            profile.experience.unshift(newExpe);
+            profile = await profile.save();
             await res.json(profile)
         } catch (e) {
-            await res.json(e)
+            errors.noprofile = "there are no profile for that user";
+            return res.status(404).json(errors)
         }
     });
 
@@ -228,18 +220,16 @@ router.post('/education',
         if (!isValid)
             return res.status(404).json({errors})
 
-        let profile = await Profile.findOne({user: req.user.id})
-        const {school, degree, fieldofstudy, from, to, current, description} = req.body;
-        const newEdu = {
-            school, degree, fieldofstudy,
-            to, from, current, description,
-        };
-        profile.education.unshift(newEdu)
-        profile = await profile.save();
         try {
+            let profile = await Profile.findOne({user: req.user.id})
+            const {school, degree, fieldofstudy, from, to, current, description} = req.body;
+            const newEdu = {school, degree, fieldofstudy, to, from, current, description};
+            profile.education.unshift(newEdu)
+            profile = await profile.save();
             await res.json(profile)
         } catch (e) {
-            await res.json(e)
+            errors.noprofile = "there are no profile for that user";
+            return res.status(404).json(errors)
         }
     });
 
@@ -249,16 +239,16 @@ router.post('/education',
 router.delete("/experience/:exp_id",
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let profile = await Profile.findOne({user: req.user.id})
-        let removeIndex = profile.experience
-            .map(item => item.id)
-            .indexOf(req.params.exp_id)
-        profile.experience.splice(removeIndex, 1)
-        profile = await profile.save();
         try {
+            let profile = await Profile.findOne({user: req.user.id})
+            let removeIndex = profile.experience
+                .map(item => item.id)
+                .indexOf(req.params.exp_id)
+            profile.experience.splice(removeIndex, 1)
+            profile = await profile.save();
             await res.json(profile)
         } catch (e) {
-            await res.json(e)
+            return res.status(404).json({errors: {noprofile: "there are no profile for that user"}})
         }
     });
 
@@ -268,16 +258,16 @@ router.delete("/experience/:exp_id",
 router.delete("/education/:edu_id",
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let profile = await Profile.findOne({user: req.user.id})
-        let removeIndex = profile.education
-            .map(item => item.id)
-            .indexOf(req.params.edu_id);
-        profile.education.splice(removeIndex, 1);
-        profile = await profile.save()
         try {
+            let profile = await Profile.findOne({user: req.user.id})
+            let removeIndex = profile.education
+                .map(item => item.id)
+                .indexOf(req.params.edu_id);
+            profile.education.splice(removeIndex, 1);
+            profile = await profile.save()
             await res.json(profile)
         } catch (e) {
-            await res.json(e)
+            return res.status(404).json({errors: {noprofile: "there are no profile for that user"}})
         }
     });
 

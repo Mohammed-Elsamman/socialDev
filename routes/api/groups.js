@@ -12,20 +12,20 @@ const validateGroupInput = require("../../validation/group");
 router.post('/',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        const {errors, isValid} = validateGroupInput(req.body);
-        if (!isValid) return res.status(404).json({errors});
-        //create new group
-        const {description, name, interestedin} = req.body
-        const newGroup = new Group({
-            description, name,
-            interestedin: interestedin.split(','),
-            user: req.user.id,
-        });
-        let group = await newGroup.save()
-        group.members.push({user: group.user});
-        group.managers.push({user: group.user});
-        group = await group.save();
         try {
+            const {errors, isValid} = validateGroupInput(req.body);
+            if (!isValid) return res.status(404).json({errors});
+            //create new group
+            const {description, name, interestedin} = req.body
+            const newGroup = new Group({
+                description, name,
+                interestedin: interestedin.split(','),
+                user: req.user.id,
+            });
+            let group = await newGroup.save()
+            group.members.push({user: group.user});
+            group.managers.push({user: group.user});
+            group = await group.save();
             await res.json(group)
         } catch (e) {
             console.log(e);
@@ -38,8 +38,8 @@ router.post('/',
 router.get('/',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let groups = await Group.find()
         try {
+            let groups = await Group.find()
             await res.json(groups)
         } catch (e) {
             res.status(404).json({profile: 'There are no profiles'})
@@ -52,13 +52,13 @@ router.get('/',
 router.get('/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let groups = await Group.find({
-            $or: [
-                {user: req.params.uid},
-                {"members.user": req.params.uid}
-            ]
-        });
         try {
+            let groups = await Group.find({
+                $or: [
+                    {user: req.params.uid},
+                    {"members.user": req.params.uid}
+                ]
+            });
             await res.json(groups)
         } catch (e) {
             res.status(404).json({goodluck: 'You are not a user, join us'})
@@ -71,8 +71,8 @@ router.get('/:uid',
 router.get('/group/:id',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
         try {
+            let group = await Group.findById(req.params.id);
             await res.json(group)
         } catch (e) {
             res.status(404).json({nogroup: 'thier is no group'})
@@ -85,10 +85,10 @@ router.get('/group/:id',
 router.get('/:id/members',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        const group = await Group.findById(req.params.id)
-            .populate('members.user', ['name', 'avatar', 'handle'])
-            .populate('user', ['name', 'avatar', 'handle']);
         try {
+            const group = await Group.findById(req.params.id)
+                .populate('members.user', ['name', 'avatar', 'handle'])
+                .populate('user', ['name', 'avatar', 'handle']);
             await res.json(group)
         } catch (e) {
             res.status(404).json({nogroup: 'thier is no group'})
@@ -101,10 +101,10 @@ router.get('/:id/members',
 router.get('/:id/managers',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.find({_id: req.params.id})
-            .populate('managers.user', ['name', 'avatar', 'handle'])
-            .populate('user', ['name', 'avatar'])
         try {
+            let group = await Group.find({_id: req.params.id})
+                .populate('managers.user', ['name', 'avatar', 'handle'])
+                .populate('user', ['name', 'avatar'])
             await res.json(group[0])
         } catch (e) {
             res.status(404).json({nogroup: 'thier is no group'})
@@ -118,10 +118,10 @@ router.get('/:id/managers',
 router.get('/:id/requests',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.find({_id: req.params.id})
-            .populate('requests.user', ['name', 'avatar', 'handle'])
-            .populate('user', ['name', 'avatar'])
         try {
+            let group = await Group.find({_id: req.params.id})
+                .populate('requests.user', ['name', 'avatar', 'handle'])
+                .populate('user', ['name', 'avatar'])
             await res.json(group[0])
         } catch (e) {
             res.status(404).json({nogroup: 'thier is no group'})
@@ -134,10 +134,10 @@ router.get('/:id/requests',
 router.delete('/:id',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findOneAndDelete({_id: req.params.id})
-        if (group) {
+        try {
+            await Group.findOneAndDelete({_id: req.params.id})
             await res.json(true)
-        } else {
+        } catch (e) {
             res.status(404).json({nodelete: 'you can not delete that group'})
         }
     });
@@ -148,8 +148,8 @@ router.delete('/:id',
 router.get('/post/:id',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let posts = await Post.find({group: req.params.id})
         try {
+            let posts = await Post.find({group: req.params.id})
             await res.json(posts)
         } catch (e) {
             await res.json(e)
@@ -162,10 +162,10 @@ router.get('/post/:id',
 router.post('/askjoin/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
-        group = group.requests.push({user: req.params.uid});
-        group = group.save()
         try {
+            let group = await Group.findById(req.params.id)
+            group = group.requests.push({user: req.params.uid});
+            group = group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
@@ -178,10 +178,10 @@ router.post('/askjoin/:id/:uid',
 router.post('/cancel/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
-        group.requests = group.requests.filter(request => request.user != req.params.uid);
-        group = group.save()
         try {
+            let group = await Group.findById(req.params.id)
+            group.requests = group.requests.filter(request => request.user != req.params.uid);
+            group = group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
@@ -194,10 +194,10 @@ router.post('/cancel/:id/:uid',
 router.post('/addmanager/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
-        group.managers = [...group.managers, {user: req.params.uid}]
-        group = await group.save()
         try {
+            let group = await Group.findById(req.params.id)
+            group.managers = [...group.managers, {user: req.params.uid}]
+            group = await group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
@@ -210,10 +210,10 @@ router.post('/addmanager/:id/:uid',
 router.post('/delmanager/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
-        group.managers = group.managers.filter(manager => manager.user != req.params.uid)
-        group = group.save()
         try {
+            let group = await Group.findById(req.params.id)
+            group.managers = group.managers.filter(manager => manager.user != req.params.uid)
+            group = group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
@@ -226,11 +226,11 @@ router.post('/delmanager/:id/:uid',
 router.post('/join/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
-        group.requests = group.requests.filter(request => request.user != req.params.uid);
-        group.members = [...group.members, {user: req.params.uid}];
-        group = await group.save()
         try {
+            let group = await Group.findById(req.params.id)
+            group.requests = group.requests.filter(request => request.user != req.params.uid);
+            group.members = [...group.members, {user: req.params.uid}];
+            group = await group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
@@ -243,10 +243,10 @@ router.post('/join/:id/:uid',
 router.post('/notjoin/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id);
-        group.requests = group.requests.filter(request => request.user != req.params.uid);
-        group = await group.save();
         try {
+            let group = await Group.findById(req.params.id);
+            group.requests = group.requests.filter(request => request.user != req.params.uid);
+            group = await group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
@@ -259,11 +259,11 @@ router.post('/notjoin/:id/:uid',
 router.post('/removemember/:id/:uid',
     passport.authenticate('jwt', {session: false}),
     async (req, res) => {
-        let group = await Group.findById(req.params.id)
-        group.managers = group.managers.filter(manager => manager.user != req.params.uid)
-        group.members = group.members.filter(member => member.user != req.params.uid)
-        group = await group.save()
         try {
+            let group = await Group.findById(req.params.id)
+            group.managers = group.managers.filter(manager => manager.user != req.params.uid)
+            group.members = group.members.filter(member => member.user != req.params.uid)
+            group = await group.save();
             await res.json(group)
         } catch (e) {
             await res.json(e)
