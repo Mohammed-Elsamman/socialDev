@@ -13,8 +13,8 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 //DB config
-// const db = require('./config/keys').mongoURI;
-const db = require('./config/keys').mongoLocal;
+const db = require('./config/keys').mongoURI;
+// const db = require('./config/keys').mongoLocal;
 //connect to MongoDB
 mongoose
     .connect(db,{ useNewUrlParser: true })
