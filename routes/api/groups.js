@@ -14,6 +14,7 @@ router.post('/',
     async (req, res) => {
         try {
             const {errors, isValid} = validateGroupInput(req.body);
+            console.log(errors);
             if (!isValid) return res.status(404).json({errors});
             //create new group
             const {description, name, interestedin} = req.body
@@ -22,7 +23,8 @@ router.post('/',
                 interestedin: interestedin.split(','),
                 user: req.user.id,
             });
-            let group = await newGroup.save()
+            let group = await newGroup.save();
+            console.log(group);
             group.members.push({user: group.user});
             group.managers.push({user: group.user});
             group = await group.save();
