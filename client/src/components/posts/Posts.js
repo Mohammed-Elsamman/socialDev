@@ -28,8 +28,8 @@ class Posts extends Component {
         let youmayInteristedIn;
         if (profiles) {
             youmayInteristedIn = profiles.map(profile => (
-                    <div className='row mb-4'>
-                        <div className="col-md-3">
+                    <div className='row mb-4 d-none d-md-block '>
+                        <div className="col-md-3 d-none d-md-block">
                             <img src={profile.user.avatar} alt='loading..' className="rounded-circle"/>
                         </div>
                         <div className="col-md-4">
@@ -49,7 +49,7 @@ class Posts extends Component {
             <div className="feed">
                 <div>
                     <div className="row">
-                        <div className="sidenav">
+                        <div className="col-md-3 sidenav d-none d-md-block">
                             <h3 className='mb-3'>Discover....</h3>
                             {youmayInteristedIn}
                         </div>
